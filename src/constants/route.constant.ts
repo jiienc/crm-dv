@@ -1,0 +1,8 @@
+export const ROOT = '/'
+export const DASHBOARD_PREFIX_PATH = '/dashboard'
+export const MASTERDATA_PREFIX_PATH = '/master-data'
+export const REPORTS_PREFIX_PATH = '/reports'
+export const PROCESS_PREFIX_PATH = '/process'
+export const PAGES_PREFIX_PATH = '/pages'
+export const USERCONTROL_PREFIX_PATH = '/user-control'
+export const ACCOUNT_PREFIX_PATH = '/account'
