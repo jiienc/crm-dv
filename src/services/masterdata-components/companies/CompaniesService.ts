@@ -1,32 +1,25 @@
 import ApiService from '../../ApiService'
 
-export async function apiGetCompaniesList<T, U extends Record<string, unknown>>(
-    params: U,
-) {
-    return ApiService.fetchDataWithAxios<T>({
-        url: '/companies',
-        method: 'get',
-        params,
-    })
+interface Company {
+    name: string
+    company_name: string
+    phone_no: string
+    email: string
 }
 
-export async function apiGetCompany<T, U extends Record<string, unknown>>({
-    id,
-    ...params
-}: U) {
-    return ApiService.fetchDataWithAxios<T>({
-        url: `/companies/${id}`,
-        method: 'get',
-        params,
-    })
+interface CompanyResponse {
+  data: Company[]
 }
 
-export async function apiGetCompanyLog<T, U extends Record<string, unknown>>({
-    ...params
-}: U) {
-    return ApiService.fetchDataWithAxios<T>({
-        url: `/company/log`,
-        method: 'get',
-        params,
-    })
+export async function apiGetCompanyList<
+  U extends Record<string, unknown> = Record<string, unknown>,
+>(params?: U): Promise<CompanyResponse> {
+  return ApiService.fetchDataWithAxios<CompanyResponse>({
+    url: '/resource/Company',
+    method: 'get',
+    params: {
+      fields: JSON.stringify(['*']),
+      ...params,
+    },
+  })
 }

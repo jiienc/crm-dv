@@ -34,10 +34,11 @@ const userControlRoute: Routes = [
       {
         key: 'userControl.accessControl.kpi',
         path: `${USERCONTROL_PREFIX_PATH}/access-control/kpi`,
-        component: lazy(() => import('@/views/userControl/accessControl/kpi/Kpi')),
+        component: lazy(() => import('@/views/others/NotFound/NotFound')),
         authority: [ADMIN, USER],
         meta: {
             pageContainerType: 'contained',
+            pageBackgroundType: 'plain',
         },
       },
       {

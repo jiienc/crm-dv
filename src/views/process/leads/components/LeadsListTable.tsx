@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
-import Avatar from '@/components/ui/Avatar'
-// import Tag from '@/components/ui/Tag'
 import Tooltip from '@/components/ui/Tooltip'
+import Tag from '@/components/ui/Tag'
 import DataTable from '@/components/shared/DataTable'
 import useLeadsList from '../hooks/useLeadsList'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,23 +10,22 @@ import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Leads } from '../types'
 import type { TableQueries } from '@/@types/common'
 
-// const statusColor: Record<string, string> = {
-//     active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-//     blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
-// }
-
-const NameColumn = ({ row }: { row: Leads }) => {
+const CompanyNameColumn = ({ row }: { row: Leads }) => {
   return (
     <div className="flex items-center">
-      <Avatar size={40} shape="circle" src={row.img} />
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/leads/leads-details/${row.id}`}
+        to={`/concepts/leads/leads-details/${row.name}`}
       >
-        {row.name}
+        {row.title}
       </Link>
     </div>
   )
+}
+
+const statusColor: Record<string, string> = {
+  Open: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
+  Contacted: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
 }
 
 const ActionColumn = ({
@@ -76,58 +74,39 @@ const LeadsListTable = () => {
   } = useLeadsList()
 
   const handleEdit = (leads: Leads) => {
-    navigate(`/concepts/leads/leads-edit/${leads.id}`)
+    navigate(`/concepts/leads/leads-edit/${leads.name}`)
   }
 
   const handleViewDetails = (leads: Leads) => {
-    navigate(`/concepts/leads/leads-details/${leads.id}`)
+    navigate(`/concepts/leads/leads-details/${leads.name}`)
   }
 
   const columns: ColumnDef<Leads>[] = useMemo(
     () => [
       {
-        header: 'id',
-        accessorKey: 'personalInfo.id',
-      },
-      {
-        header: 'Name',
-        accessorKey: 'name',
+        header: 'Title',
+        accessorKey: 'title',
         cell: (props) => {
           const row = props.row.original
-          return <NameColumn row={row} />
+          return <CompanyNameColumn row={row} />
         },
       },
-      // {
-      //     header: 'Email',
-      //     accessorKey: 'email',
-      // },
       {
-        header: 'address',
-        accessorKey: 'personalInfo.location',
+        header: 'Status',
+        accessorKey: 'status',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <div className="flex items-center">
+              <Tag className={statusColor[row.status]}>
+                <span className="capitalize">{row.status}</span>
+              </Tag>
+            </div>
+          )
+        },
       },
-      // {
-      //     header: 'Status',
-      //     accessorKey: 'status',
-      //     cell: (props) => {
-      //         const row = props.row.original
-      //         return (
-      //             <div className="flex items-center">
-      //                 <Tag className={statusColor[row.status]}>
-      //                     <span className="capitalize">{row.status}</span>
-      //                 </Tag>
-      //             </div>
-      //         )
-      //     },
-      // },
-      // {
-      //     header: 'Spent',
-      //     accessorKey: 'totalSpending',
-      //     cell: (props) => {
-      //         return <span>${props.row.original.totalSpending}</span>
-      //     },
-      // },
       {
-        header: '',
+        header: 'Action',
         id: 'action',
         cell: (props) => (
           <ActionColumn
@@ -195,7 +174,7 @@ const LeadsListTable = () => {
         pageSize: tableData.pageSize as number,
       }}
       checkboxChecked={(row) =>
-        selectedLeads.some((selected) => selected.id === row.id)
+        selectedLeads.some((selected) => selected.name === row.name)
       }
       onPaginationChange={handlePaginationChange}
       onSelectChange={handleSelectChange}

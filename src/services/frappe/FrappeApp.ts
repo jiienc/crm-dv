@@ -1,9 +1,4 @@
 import axios from "axios";
-// import dotenv from 'dotenv';
-
-// dotenv.config();
-
-// const FRAPPE_URL = "https://exmanage-internal.connectowl.io/";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 const apiSecret = import.meta.env.VITE_API_SECRET;

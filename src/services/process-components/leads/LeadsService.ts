@@ -1,32 +1,24 @@
 import ApiService from '../../ApiService'
 
-export async function apiGetLeadsList<T, U extends Record<string, unknown>>(
-    params: U,
-) {
-    return ApiService.fetchDataWithAxios<T>({
-        url: '/leads',
-        method: 'get',
-        params,
-    })
+interface Lead {
+  name: string
+  title: string
+  status: string
 }
 
-export async function apiGetleads<T, U extends Record<string, unknown>>({
-    id,
-    ...params
-}: U) {
-    return ApiService.fetchDataWithAxios<T>({
-        url: `/leads/${id}`,
-        method: 'get',
-        params,
-    })
+interface LeadsResponse {
+  data: Lead[]
 }
 
-export async function apiGetleadsLog<T, U extends Record<string, unknown>>({
-    ...params
-}: U) {
-    return ApiService.fetchDataWithAxios<T>({
-        url: `/leads/log`,
-        method: 'get',
-        params,
-    })
+export async function apiGetLeadsList<
+  U extends Record<string, unknown> = Record<string, unknown>,
+>(params?: U): Promise<LeadsResponse> {
+  return ApiService.fetchDataWithAxios<LeadsResponse>({
+    url: '/resource/Lead',
+    method: 'get',
+    params: {
+      fields: JSON.stringify(['*']),
+      ...params,
+    },
+  })
 }

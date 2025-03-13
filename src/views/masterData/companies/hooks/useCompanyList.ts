@@ -1,33 +1,35 @@
-import { apiGetCompaniesList } from '@/services/masterdata-components/companies/CompaniesService'
+import { apiGetCompanyList } from '@/services/masterdata-components/companies/CompaniesService'
 import useSWR from 'swr'
 import { useCompanyListStore } from '../store/companyListStore'
-import type { GetCompaniesListResponse } from '../types'
 import type { TableQueries } from '@/@types/common'
 
 export default function useCompanyList() {
     const {
         tableData,
-        filterData,
         setTableData,
         selectedCompany,
         setSelectedCompany,
         setSelectAllCompany,
-        setFilterData,
     } = useCompanyListStore((state) => state)
 
     const { data, error, isLoading, mutate } = useSWR(
-        ['/api/companies', { ...tableData, ...filterData }],
+        ['/resource/Company', { ...tableData }],
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, params]) =>
-            apiGetCompaniesList<GetCompaniesListResponse, TableQueries>(params),
-        {
-            revalidateOnFocus: false,
+        async ([_, params]) => {
+          try {
+            return await apiGetCompanyList<TableQueries>(params)
+          } catch (err) {
+            console.error('Error fetching leads:', err)
+            throw err
+          }
         },
-    )
+        {
+          revalidateOnFocus: false,
+        },
+      )
 
-    const companyList = data?.list || []
-
-    const companyListTotal = data?.total || 0
+      const companyList = data?.data ?? []
+      const companyListTotal = companyList.length
 
     return {
         companyList,
@@ -35,12 +37,10 @@ export default function useCompanyList() {
         error,
         isLoading,
         tableData,
-        filterData,
         mutate,
         setTableData,
         selectedCompany,
         setSelectedCompany,
         setSelectAllCompany,
-        setFilterData,
     }
 }
