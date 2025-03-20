@@ -4,29 +4,29 @@ import { TbSearch } from 'react-icons/tb'
 import type { ChangeEvent } from 'react'
 
 type ProductListSearchProps = {
-    onInputChange: (value: string) => void
+  onInputChange: (value: string) => void
 }
 
 const ProductListSearch = (props: ProductListSearchProps) => {
-    const { onInputChange } = props
+  const { onInputChange } = props
 
-    function handleDebounceFn(value: string) {
-        onInputChange?.(value)
-    }
+  function handleDebounceFn(value: string) {
+    onInputChange?.(value)
+  }
 
-    const debounceFn = useDebounce(handleDebounceFn, 500)
+  const debounceFn = useDebounce(handleDebounceFn, 500)
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        debounceFn(e.target.value)
-    }
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    debounceFn(e.target.value)
+  }
 
-    return (
-        <Input
-            placeholder="Search"
-            suffix={<TbSearch className="text-lg" />}
-            onChange={handleInputChange}
-        />
-    )
+  return (
+    <Input
+      placeholder="Search..."
+      suffix={<TbSearch className="text-lg" />}
+      onChange={handleInputChange}
+    />
+  )
 }
 
 export default ProductListSearch

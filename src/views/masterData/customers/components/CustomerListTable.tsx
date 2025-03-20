@@ -1,6 +1,4 @@
 import { useMemo } from 'react'
-import Avatar from '@/components/ui/Avatar'
-// import Tag from '@/components/ui/Tag'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useCustomerList from '../hooks/useCustomerList'
@@ -11,21 +9,23 @@ import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Customer } from '../types'
 import type { TableQueries } from '@/@types/common'
 
-// const statusColor: Record<string, string> = {
-//     active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-//     blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
-// }
-
 const NameColumn = ({ row }: { row: Customer }) => {
   return (
     <div className="flex items-center">
-      <Avatar size={40} shape="circle" src={row.img} />
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/customers/customer-details/${row.id}`}
+        to={`/concepts/customers/customer-details/${row.name}`}
       >
         {row.name}
       </Link>
+    </div>
+  )
+}
+
+const AddressColumn = ({ row }: { row: Customer }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.primary_address}</p>
     </div>
   )
 }
@@ -76,58 +76,33 @@ const CustomerListTable = () => {
   } = useCustomerList()
 
   const handleEdit = (customer: Customer) => {
-    navigate(`/concepts/customers/customer-edit/${customer.id}`)
+    navigate(`/concepts/customers/customer-edit/${customer.name}`)
   }
 
   const handleViewDetails = (customer: Customer) => {
-    navigate(`/concepts/customers/customer-details/${customer.id}`)
+    navigate(`/concepts/customers/customer-details/${customer.name}`)
   }
 
   const columns: ColumnDef<Customer>[] = useMemo(
     () => [
       {
-        header: 'id',
-        accessorKey: 'personalInfo.id',
-      },
-      {
-        header: 'Name',
-        accessorKey: 'name',
+        header: 'Customer Name',
+        accessorKey: 'customer_name',
         cell: (props) => {
           const row = props.row.original
           return <NameColumn row={row} />
         },
       },
-      // {
-      //     header: 'Email',
-      //     accessorKey: 'email',
-      // },
       {
-        header: 'address',
-        accessorKey: 'personalInfo.location',
+        header: 'Primary Address',
+        accessorKey: 'primary_address',
+        cell: (props) => {
+          const row = props.row.original
+          return <AddressColumn row={row} />
+        },
       },
-      // {
-      //     header: 'Status',
-      //     accessorKey: 'status',
-      //     cell: (props) => {
-      //         const row = props.row.original
-      //         return (
-      //             <div className="flex items-center">
-      //                 <Tag className={statusColor[row.status]}>
-      //                     <span className="capitalize">{row.status}</span>
-      //                 </Tag>
-      //             </div>
-      //         )
-      //     },
-      // },
-      // {
-      //     header: 'Spent',
-      //     accessorKey: 'totalSpending',
-      //     cell: (props) => {
-      //         return <span>${props.row.original.totalSpending}</span>
-      //     },
-      // },
       {
-        header: '',
+        header: 'Action',
         id: 'action',
         cell: (props) => (
           <ActionColumn
@@ -195,7 +170,7 @@ const CustomerListTable = () => {
         pageSize: tableData.pageSize as number,
       }}
       checkboxChecked={(row) =>
-        selectedCustomer.some((selected) => selected.id === row.id)
+        selectedCustomer.some((selected) => selected.name === row.name)
       }
       onPaginationChange={handlePaginationChange}
       onSelectChange={handleSelectChange}

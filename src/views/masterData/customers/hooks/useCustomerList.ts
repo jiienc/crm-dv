@@ -1,46 +1,46 @@
-import { apiGetCustomersList } from '@/services/masterdata-components/customers/CustomersService'
+import { apiGetCustomerList } from '@/services/masterdata-components/customers/CustomersService'
 import useSWR from 'swr'
 import { useCustomerListStore } from '../store/customerListStore'
-import type { GetCustomersListResponse } from '../types'
 import type { TableQueries } from '@/@types/common'
 
 export default function useCustomerList() {
-    const {
-        tableData,
-        filterData,
-        setTableData,
-        selectedCustomer,
-        setSelectedCustomer,
-        setSelectAllCustomer,
-        setFilterData,
-    } = useCustomerListStore((state) => state)
+  const {
+    tableData,
+    setTableData,
+    selectedCustomer,
+    setSelectedCustomer,
+    setSelectAllCustomer,
+  } = useCustomerListStore((state) => state)
 
-    const { data, error, isLoading, mutate } = useSWR(
-        ['/api/customers', { ...tableData, ...filterData }],
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, params]) =>
-            apiGetCustomersList<GetCustomersListResponse, TableQueries>(params),
-        {
-            revalidateOnFocus: false,
-        },
-    )
+  const { data, error, isLoading, mutate } = useSWR(
+    ['/resource/Customer', { ...tableData }],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async ([_, params]) => {
+      try {
+        return await apiGetCustomerList<TableQueries>(params)
+      } catch (err) {
+        console.error('Error fetching leads:', err)
+        throw err
+      }
+    },
+    {
+      revalidateOnFocus: false,
+    },
+  )
 
-    const customerList = data?.list || []
+  const customerList = data?.data ?? []
+  const customerListTotal = customerList.length
 
-    const customerListTotal = data?.total || 0
-
-    return {
-        customerList,
-        customerListTotal,
-        error,
-        isLoading,
-        tableData,
-        filterData,
-        mutate,
-        setTableData,
-        selectedCustomer,
-        setSelectedCustomer,
-        setSelectAllCustomer,
-        setFilterData,
-    }
+  return {
+    customerList,
+    customerListTotal,
+    error,
+    isLoading,
+    tableData,
+    mutate,
+    setTableData,
+    selectedCustomer,
+    setSelectedCustomer,
+    setSelectAllCustomer,
+  }
 }
