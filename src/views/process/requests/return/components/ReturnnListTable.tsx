@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
-import Avatar from '@/components/ui/Avatar'
-// import Tag from '@/components/ui/Tag'
+import Tag from '@/components/ui/Tag'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useReturnnList from '../hooks/useReturnnList'
@@ -11,18 +10,17 @@ import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Returnn } from '../types'
 import type { TableQueries } from '@/@types/common'
 
-// const statusColor: Record<string, string> = {
-//     active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-//     blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
-// }
+const statusColor: Record<string, string> = {
+    active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
+    blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
+}
 
 const NameColumn = ({ row }: { row: Returnn }) => {
   return (
     <div className="flex items-center">
-      <Avatar size={40} shape="circle" src={row.img} />
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/returnn/returnn-details/${row.id}`}
+        to={`/concepts/returnn/returnn-details/${row.name}`}
       >
         {row.name}
       </Link>
@@ -76,58 +74,63 @@ const ReturnnListTable = () => {
   } = useReturnnList()
 
   const handleEdit = (returnn: Returnn) => {
-    navigate(`/concepts/returnn/returnn-edit/${returnn.id}`)
+    navigate(`/concepts/returnn/returnn-edit/${returnn.name}`)
   }
 
   const handleViewDetails = (returnn: Returnn) => {
-    navigate(`/concepts/returnn/returnn-details/${returnn.id}`)
+    navigate(`/concepts/returnn/returnn-details/${returnn.name}`)
   }
 
   const columns: ColumnDef<Returnn>[] = useMemo(
     () => [
       {
-        header: 'id',
-        accessorKey: 'personalInfo.id',
-      },
-      {
-        header: 'Name',
-        accessorKey: 'name',
+        header: 'Quotation Number',
+        accessorKey: 'quotation_number',
         cell: (props) => {
           const row = props.row.original
           return <NameColumn row={row} />
         },
       },
-      // {
-      //     header: 'Email',
-      //     accessorKey: 'email',
-      // },
       {
-        header: 'address',
-        accessorKey: 'personalInfo.location',
+        header: 'Assigned',
+        accessorKey: 'assigned',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
       },
-      // {
-      //     header: 'Status',
-      //     accessorKey: 'status',
-      //     cell: (props) => {
-      //         const row = props.row.original
-      //         return (
-      //             <div className="flex items-center">
-      //                 <Tag className={statusColor[row.status]}>
-      //                     <span className="capitalize">{row.status}</span>
-      //                 </Tag>
-      //             </div>
-      //         )
-      //     },
-      // },
-      // {
-      //     header: 'Spent',
-      //     accessorKey: 'totalSpending',
-      //     cell: (props) => {
-      //         return <span>${props.row.original.totalSpending}</span>
-      //     },
-      // },
       {
-        header: '',
+        header: 'PIC',
+        accessorKey: 'pic',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      },
+      {
+          header: 'Status',
+          accessorKey: 'status',
+          cell: (props) => {
+              const row = props.row.original
+              return (
+                  <div className="flex items-center">
+                      <Tag className={statusColor[row.status]}>
+                          <span className="capitalize">{row.status}</span>
+                      </Tag>
+                  </div>
+              )
+          },
+      },
+      {
+        header: 'File',
+        accessorKey: 'file',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      },
+      {
+        header: 'Action',
         id: 'action',
         cell: (props) => (
           <ActionColumn
@@ -195,7 +198,7 @@ const ReturnnListTable = () => {
         pageSize: tableData.pageSize as number,
       }}
       checkboxChecked={(row) =>
-        selectedReturnn.some((selected) => selected.id === row.id)
+        selectedReturnn.some((selected) => selected.name === row.name)
       }
       onPaginationChange={handlePaginationChange}
       onSelectChange={handleSelectChange}

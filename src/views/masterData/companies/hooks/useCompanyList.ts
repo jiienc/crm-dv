@@ -2,45 +2,42 @@ import { apiGetCompanyList } from '@/services/masterdata-components/companies/Co
 import useSWR from 'swr'
 import { useCompanyListStore } from '../store/companyListStore'
 import type { TableQueries } from '@/@types/common'
+import { GetCompanyListResponse } from '../types'
 
-export default function useCompanyList() {
-    const {
-        tableData,
-        setTableData,
-        selectedCompany,
-        setSelectedCompany,
-        setSelectAllCompany,
-    } = useCompanyListStore((state) => state)
+const useCompanyList = () => {
+  const {
+    tableData,
+    setTableData,
+    selectedCompany,
+    setSelectedCompany,
+    setSelectAllCompany,
+  } = useCompanyListStore((state) => state)
 
-    const { data, error, isLoading, mutate } = useSWR(
-        ['/resource/Company', { ...tableData }],
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        async ([_, params]) => {
-          try {
-            return await apiGetCompanyList<TableQueries>(params)
-          } catch (err) {
-            console.error('Error fetching leads:', err)
-            throw err
-          }
-        },
-        {
-          revalidateOnFocus: false,
-        },
-      )
+  const { data, error, isLoading, mutate } = useSWR(
+    ['/resource/Company', { ...tableData }],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ([_, params]) =>
+      apiGetCompanyList<GetCompanyListResponse, TableQueries>(params),
+    {
+      revalidateOnFocus: false,
+    },
+  )
 
-      const companyList = data?.data ?? []
-      const companyListTotal = companyList.length
+  const companyList = data?.data || []
+  const companyListTotal = data?.total || companyList.length || 0
 
-    return {
-        companyList,
-        companyListTotal,
-        error,
-        isLoading,
-        tableData,
-        mutate,
-        setTableData,
-        selectedCompany,
-        setSelectedCompany,
-        setSelectAllCompany,
-    }
+  return {
+    companyList,
+    companyListTotal,
+    error,
+    isLoading,
+    tableData,
+    mutate,
+    setTableData,
+    selectedCompany,
+    setSelectedCompany,
+    setSelectAllCompany,
+  }
 }
+
+export default useCompanyList

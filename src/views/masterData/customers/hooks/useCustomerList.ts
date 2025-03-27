@@ -2,8 +2,9 @@ import { apiGetCustomerList } from '@/services/masterdata-components/customers/C
 import useSWR from 'swr'
 import { useCustomerListStore } from '../store/customerListStore'
 import type { TableQueries } from '@/@types/common'
+import { GetCustomerListResponse } from '../types'
 
-export default function useCustomerList() {
+const useCustomerList = () => {
   const {
     tableData,
     setTableData,
@@ -15,32 +16,28 @@ export default function useCustomerList() {
   const { data, error, isLoading, mutate } = useSWR(
     ['/resource/Customer', { ...tableData }],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async ([_, params]) => {
-      try {
-        return await apiGetCustomerList<TableQueries>(params)
-      } catch (err) {
-        console.error('Error fetching leads:', err)
-        throw err
-      }
-    },
-    {
-      revalidateOnFocus: false,
-    },
+    ([_, params]) =>
+          apiGetCustomerList<GetCustomerListResponse, TableQueries>(params),
+        {
+          revalidateOnFocus: false,
+        },
   )
 
-  const customerList = data?.data ?? []
-  const customerListTotal = customerList.length
+  const customerList = data?.data || []
+  const customerListTotal = data?.total || customerList.length || 0
 
   return {
-    customerList,
-    customerListTotal,
     error,
     isLoading,
     tableData,
     mutate,
+    customerList,
+    customerListTotal,
     setTableData,
     selectedCustomer,
     setSelectedCustomer,
     setSelectAllCustomer,
   }
 }
+
+export default useCustomerList

@@ -7,16 +7,14 @@ import type { TableQueries } from '@/@types/common'
 export default function useProductImprovementList() {
     const {
         tableData,
-        filterData,
         setTableData,
         selectedProductImprovement,
         setSelectedProductImprovement,
         setSelectAllProductImprovement,
-        setFilterData,
     } = useProductImprovementListStore((state) => state)
 
     const { data, error, isLoading, mutate } = useSWR(
-        ['/api/productimprovement', { ...tableData, ...filterData }],
+        ['/resource/ProductImprovement', { ...tableData }],
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         ([_, params]) =>
             apiGetProductImprovementList<GetProductImprovementListResponse, TableQueries>(params),
@@ -25,9 +23,9 @@ export default function useProductImprovementList() {
         },
     )
 
-    const productimprovementList = data?.list || []
+    const productimprovementList = data?.data || []
 
-    const productimprovementListTotal = data?.total || 0
+    const productimprovementListTotal = data?.total || productimprovementList.length || 0
 
     return {
         productimprovementList,
@@ -35,12 +33,10 @@ export default function useProductImprovementList() {
         error,
         isLoading,
         tableData,
-        filterData,
         mutate,
         setTableData,
         selectedProductImprovement,
         setSelectedProductImprovement,
         setSelectAllProductImprovement,
-        setFilterData,
     }
 }

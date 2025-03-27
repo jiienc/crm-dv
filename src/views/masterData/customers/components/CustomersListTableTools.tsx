@@ -1,5 +1,5 @@
-import useCustomerList from '../hooks/useCustomerList'
 import CustomerListSearch from './CustomerListSearch'
+import useCustomerList from '../hooks/useCustomerList'
 import cloneDeep from 'lodash/cloneDeep'
 
 const CustomersListTableTools = () => {

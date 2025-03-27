@@ -24,9 +24,9 @@ const processRoute: Routes = [
         },
     },
     {
-        key: 'process.oppurtunities',
-        path: `${PROCESS_PREFIX_PATH}/oppurtunities`,
-        component: lazy(() => import('@/views/process/oppurtunities/OppurtunitiesList')),
+        key: 'process.opportunities',
+        path: `${PROCESS_PREFIX_PATH}/opportunities`,
+        component: lazy(() => import('@/views/process/opportunities/OpportunitiesList')),
         authority: [ADMIN, USER],
         meta: {
             pageContainerType: 'contained',

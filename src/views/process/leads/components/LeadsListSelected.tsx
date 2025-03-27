@@ -31,7 +31,7 @@ const LeadsListSelected = () => {
     setSelectAllLeads([])
     mutate(
       {
-        list: newLeadsList,
+        data: newLeadsList,
         total: leadsListTotal - selectedLeads.length,
       },
       false,

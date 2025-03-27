@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
-import Avatar from '@/components/ui/Avatar'
-// import Tag from '@/components/ui/Tag'
+import Tag from '@/components/ui/Tag'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useProductImprovementList from '../hooks/useProductImprovementList'
@@ -11,18 +10,17 @@ import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { ProductImprovement } from '../types'
 import type { TableQueries } from '@/@types/common'
 
-// const statusColor: Record<string, string> = {
-//     active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-//     blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
-// }
+const statusColor: Record<string, string> = {
+  active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
+  blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
+}
 
 const NameColumn = ({ row }: { row: ProductImprovement }) => {
   return (
     <div className="flex items-center">
-      <Avatar size={40} shape="circle" src={row.img} />
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/productimprovement/productimprovement-details/${row.id}`}
+        to={`/concepts/productimprovement/productimprovement-details/${row.name}`}
       >
         {row.name}
       </Link>
@@ -76,58 +74,67 @@ const ProductImprovementListTable = () => {
   } = useProductImprovementList()
 
   const handleEdit = (productimprovement: ProductImprovement) => {
-    navigate(`/concepts/productimprovement/productimprovement-edit/${productimprovement.id}`)
+    navigate(
+      `/concepts/productimprovement/productimprovement-edit/${productimprovement.name}`,
+    )
   }
 
   const handleViewDetails = (productimprovement: ProductImprovement) => {
-    navigate(`/concepts/productimprovement/productimprovement-details/${productimprovement.id}`)
+    navigate(
+      `/concepts/productimprovement/productimprovement-details/${productimprovement.name}`,
+    )
   }
 
   const columns: ColumnDef<ProductImprovement>[] = useMemo(
     () => [
       {
-        header: 'id',
-        accessorKey: 'personalInfo.id',
-      },
-      {
-        header: 'Name',
-        accessorKey: 'name',
+        header: 'Product Code',
+        accessorKey: 'product_code',
         cell: (props) => {
           const row = props.row.original
           return <NameColumn row={row} />
         },
       },
-      // {
-      //     header: 'Email',
-      //     accessorKey: 'email',
-      // },
       {
-        header: 'address',
-        accessorKey: 'personalInfo.location',
+        header: 'Company',
+        accessorKey: 'company',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
       },
-      // {
-      //     header: 'Status',
-      //     accessorKey: 'status',
-      //     cell: (props) => {
-      //         const row = props.row.original
-      //         return (
-      //             <div className="flex items-center">
-      //                 <Tag className={statusColor[row.status]}>
-      //                     <span className="capitalize">{row.status}</span>
-      //                 </Tag>
-      //             </div>
-      //         )
-      //     },
-      // },
-      // {
-      //     header: 'Spent',
-      //     accessorKey: 'totalSpending',
-      //     cell: (props) => {
-      //         return <span>${props.row.original.totalSpending}</span>
-      //     },
-      // },
       {
-        header: '',
+        header: 'Assigned',
+        accessorKey: 'assigned',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      },
+      {
+        header: 'PIC',
+        accessorKey: 'pic',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      },
+      {
+        header: 'Status',
+        accessorKey: 'status',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <div className="flex items-center">
+              <Tag className={statusColor[row.status]}>
+                <span className="capitalize">{row.status}</span>
+              </Tag>
+            </div>
+          )
+        },
+      },
+      {
+        header: 'Action',
         id: 'action',
         cell: (props) => (
           <ActionColumn
@@ -171,7 +178,10 @@ const ProductImprovementListTable = () => {
     setSelectedProductImprovement(checked, row)
   }
 
-  const handleAllRowSelect = (checked: boolean, rows: Row<ProductImprovement>[]) => {
+  const handleAllRowSelect = (
+    checked: boolean,
+    rows: Row<ProductImprovement>[],
+  ) => {
     if (checked) {
       const originalRows = rows.map((row) => row.original)
       setSelectAllProductImprovement(originalRows)
@@ -195,7 +205,9 @@ const ProductImprovementListTable = () => {
         pageSize: tableData.pageSize as number,
       }}
       checkboxChecked={(row) =>
-        selectedProductImprovement.some((selected) => selected.id === row.id)
+        selectedProductImprovement.some(
+          (selected) => selected.name === row.name,
+        )
       }
       onPaginationChange={handlePaginationChange}
       onSelectChange={handleSelectChange}

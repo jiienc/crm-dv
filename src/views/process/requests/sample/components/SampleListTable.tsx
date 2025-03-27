@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
-import Avatar from '@/components/ui/Avatar'
-// import Tag from '@/components/ui/Tag'
+import Tag from '@/components/ui/Tag'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useSampleList from '../hooks/useSampleList'
@@ -11,18 +10,17 @@ import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Sample } from '../types'
 import type { TableQueries } from '@/@types/common'
 
-// const statusColor: Record<string, string> = {
-//     active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-//     blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
-// }
+const statusColor: Record<string, string> = {
+  active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
+  blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
+}
 
 const NameColumn = ({ row }: { row: Sample }) => {
   return (
     <div className="flex items-center">
-      <Avatar size={40} shape="circle" src={row.img} />
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/sample/sample-details/${row.id}`}
+        to={`/concepts/sample/sample-details/${row.name}`}
       >
         {row.name}
       </Link>
@@ -76,58 +74,63 @@ const SampleListTable = () => {
   } = useSampleList()
 
   const handleEdit = (sample: Sample) => {
-    navigate(`/concepts/sample/sample-edit/${sample.id}`)
+    navigate(`/concepts/sample/sample-edit/${sample.name}`)
   }
 
   const handleViewDetails = (sample: Sample) => {
-    navigate(`/concepts/sample/sample-details/${sample.id}`)
+    navigate(`/concepts/sample/sample-details/${sample.name}`)
   }
 
   const columns: ColumnDef<Sample>[] = useMemo(
     () => [
       {
-        header: 'id',
-        accessorKey: 'personalInfo.id',
-      },
-      {
-        header: 'Name',
-        accessorKey: 'name',
+        header: 'Product Code',
+        accessorKey: 'product_code',
         cell: (props) => {
           const row = props.row.original
           return <NameColumn row={row} />
         },
       },
-      // {
-      //     header: 'Email',
-      //     accessorKey: 'email',
-      // },
       {
-        header: 'address',
-        accessorKey: 'personalInfo.location',
+        header: 'Company',
+        accessorKey: 'company',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
       },
-      // {
-      //     header: 'Status',
-      //     accessorKey: 'status',
-      //     cell: (props) => {
-      //         const row = props.row.original
-      //         return (
-      //             <div className="flex items-center">
-      //                 <Tag className={statusColor[row.status]}>
-      //                     <span className="capitalize">{row.status}</span>
-      //                 </Tag>
-      //             </div>
-      //         )
-      //     },
-      // },
-      // {
-      //     header: 'Spent',
-      //     accessorKey: 'totalSpending',
-      //     cell: (props) => {
-      //         return <span>${props.row.original.totalSpending}</span>
-      //     },
-      // },
       {
-        header: '',
+        header: 'Assigned',
+        accessorKey: 'assigned',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      },
+      {
+        header: 'PIC',
+        accessorKey: 'pic',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      },
+      {
+        header: 'Status',
+        accessorKey: 'status',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <div className="flex items-center">
+              <Tag className={statusColor[row.status]}>
+                <span className="capitalize">{row.status}</span>
+              </Tag>
+            </div>
+          )
+        },
+      },
+      {
+        header: 'Action',
         id: 'action',
         cell: (props) => (
           <ActionColumn
@@ -195,7 +198,7 @@ const SampleListTable = () => {
         pageSize: tableData.pageSize as number,
       }}
       checkboxChecked={(row) =>
-        selectedSample.some((selected) => selected.id === row.id)
+        selectedSample.some((selected) => selected.name === row.name)
       }
       onPaginationChange={handlePaginationChange}
       onSelectChange={handleSelectChange}

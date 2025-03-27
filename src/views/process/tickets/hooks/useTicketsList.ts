@@ -5,42 +5,38 @@ import type { GetTicketsListResponse } from '../types'
 import type { TableQueries } from '@/@types/common'
 
 export default function useTicketsList() {
-    const {
-        tableData,
-        filterData,
-        setTableData,
-        selectedTickets,
-        setSelectedTickets,
-        setSelectAllTickets,
-        setFilterData,
-    } = useTicketsListStore((state) => state)
+  const {
+    tableData,
+    setTableData,
+    selectedTickets,
+    setSelectedTickets,
+    setSelectAllTickets,
+  } = useTicketsListStore((state) => state)
 
-    const { data, error, isLoading, mutate } = useSWR(
-        ['/api/tickets', { ...tableData, ...filterData }],
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, params]) =>
-            apiGetTicketsList<GetTicketsListResponse, TableQueries>(params),
-        {
-            revalidateOnFocus: false,
-        },
-    )
+  const { data, error, isLoading, mutate } = useSWR(
+    ['/resource/Ticket', { ...tableData }],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ([_, params]) =>
+      apiGetTicketsList<GetTicketsListResponse, TableQueries>(params),
+    {
+      revalidateOnFocus: false,
+    },
+  )
 
-    const ticketsList = data?.list || []
+  const ticketsList = data?.data || []
 
-    const ticketsListTotal = data?.total || 0
+  const ticketsListTotal = data?.total || ticketsList.length || 0
 
-    return {
-        ticketsList,
-        ticketsListTotal,
-        error,
-        isLoading,
-        tableData,
-        filterData,
-        mutate,
-        setTableData,
-        selectedTickets,
-        setSelectedTickets,
-        setSelectAllTickets,
-        setFilterData,
-    }
+  return {
+    ticketsList,
+    ticketsListTotal,
+    error,
+    isLoading,
+    tableData,
+    mutate,
+    setTableData,
+    selectedTickets,
+    setSelectedTickets,
+    setSelectAllTickets,
+  }
 }

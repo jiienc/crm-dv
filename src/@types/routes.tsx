@@ -19,7 +19,8 @@ export interface Meta {
 export type Route = {
   key: string
   path: string
-  component: LazyExoticComponent<<T extends Meta>(props: T) => JSX.Element>
+  // component: LazyExoticComponent<<T extends Meta>(props: T) => JSX.Element>
+  component: LazyExoticComponent<React.ComponentType<any>>
   authority: string[]
   meta?: Meta
 }

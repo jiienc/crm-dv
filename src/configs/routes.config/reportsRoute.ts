@@ -7,7 +7,7 @@ const reportsRoute: Routes = [
   {
     key: 'reports.report',
     path: `${REPORTS_PREFIX_PATH}/report`,
-    component: lazy(() => import('@/views/reports/report/Report')),
+    component: lazy(() => import('@/views/reports/report/ReportTabs')),
     authority: [ADMIN, USER],
     meta: {
       pageContainerType: 'contained',

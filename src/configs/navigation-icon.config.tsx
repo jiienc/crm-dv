@@ -25,7 +25,7 @@ const navigationIcon: NavigationIcons = {
     product: <PiPackageDuotone />,
     leads: <PiIdentificationBadgeDuotone />,
     events: <PiCalendarDotsDuotone />,
-    oppurtunities: <PiHandshakeDuotone />,
+    opportunities: <PiHandshakeDuotone />,
     tickets: <PiTicketDuotone />,
     requests: <PiStackPlusDuotone />,
     quotes: <PiNotePencilDuotone />,

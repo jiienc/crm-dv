@@ -1,6 +1,5 @@
 import Button from '@/components/ui/Button'
-// import { TbCloudDownload } from 'react-icons/tb'
-import { TbUserPlus } from 'react-icons/tb'
+import { TbCloudDownload, TbUserPlus } from 'react-icons/tb'
 import { useNavigate } from 'react-router-dom'
 import useLeadsList from '../hooks/useLeadsList'
 import { CSVLink } from 'react-csv'
@@ -13,12 +12,12 @@ const LeadsListActionTools = () => {
   return (
     <div className="flex flex-col md:flex-row gap-3">
       <CSVLink className="w-full" filename="leadsList.csv" data={leadsList}>
-        {/* <Button
-                    icon={<TbCloudDownload className="text-xl" />}
-                    className="w-full"
-                >
-                    Download
-                </Button> */}
+        <Button
+          icon={<TbCloudDownload className="text-xl" />}
+          className="w-full"
+        >
+          Download
+        </Button>
       </CSVLink>
       <Button
         variant="solid"

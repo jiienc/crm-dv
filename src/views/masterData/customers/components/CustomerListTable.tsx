@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useCustomerList from '../hooks/useCustomerList'
-import { Link, useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
+import { Link, useNavigate } from 'react-router-dom'
 import { TbPencil, TbEye } from 'react-icons/tb'
 import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Customer } from '../types'
@@ -16,7 +16,7 @@ const NameColumn = ({ row }: { row: Customer }) => {
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
         to={`/concepts/customers/customer-details/${row.name}`}
       >
-        {row.name}
+        {row.customer_name}
       </Link>
     </div>
   )
@@ -26,6 +26,14 @@ const AddressColumn = ({ row }: { row: Customer }) => {
   return (
     <div className="flex items-center">
       <p>{row.primary_address}</p>
+    </div>
+  )
+}
+
+const CustCodeColumn = ({ row }: { row: Customer }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.customer_type}</p>
     </div>
   )
 }
@@ -94,11 +102,19 @@ const CustomerListTable = () => {
         },
       },
       {
-        header: 'Primary Address',
+        header: 'Address Billing',
         accessorKey: 'primary_address',
         cell: (props) => {
           const row = props.row.original
           return <AddressColumn row={row} />
+        },
+      },
+      {
+        header: 'Customer Code',
+        accessorKey: 'customer_type',
+        cell: (props) => {
+          const row = props.row.original
+          return <CustCodeColumn row={row} />
         },
       },
       {

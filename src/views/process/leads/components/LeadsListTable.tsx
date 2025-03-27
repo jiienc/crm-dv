@@ -17,8 +17,32 @@ const CompanyNameColumn = ({ row }: { row: Leads }) => {
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
         to={`/concepts/leads/leads-details/${row.name}`}
       >
-        {row.title}
+        {row.company_name}
       </Link>
+    </div>
+  )
+}
+
+const PhoneColumn = ({ row }: { row: Leads }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.phone}</p>
+    </div>
+  )
+}
+
+const CustomerColumn = ({ row }: { row: Leads }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.customer}</p>
+    </div>
+  )
+}
+
+const AssignedColumn = ({ row }: { row: Leads }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.lead_owner}</p>
     </div>
   )
 }
@@ -84,11 +108,19 @@ const LeadsListTable = () => {
   const columns: ColumnDef<Leads>[] = useMemo(
     () => [
       {
-        header: 'Title',
-        accessorKey: 'title',
+        header: 'Company Name',
+        accessorKey: 'company_name',
         cell: (props) => {
           const row = props.row.original
           return <CompanyNameColumn row={row} />
+        },
+      },
+      {
+        header: 'Phone',
+        accessorKey: 'phone',
+        cell: (props) => {
+          const row = props.row.original
+          return <PhoneColumn row={row} />
         },
       },
       {
@@ -103,6 +135,22 @@ const LeadsListTable = () => {
               </Tag>
             </div>
           )
+        },
+      },
+      {
+        header: 'Customer Code',
+        accessorKey: 'customer',
+        cell: (props) => {
+          const row = props.row.original
+          return <CustomerColumn row={row} />
+        },
+      },
+      {
+        header: 'Assigned',
+        accessorKey: 'lead_owner',
+        cell: (props) => {
+          const row = props.row.original
+          return <AssignedColumn row={row} />
         },
       },
       {

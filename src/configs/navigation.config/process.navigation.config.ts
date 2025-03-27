@@ -50,17 +50,17 @@ const processNavigationConfig: NavigationTree[] = [
         subMenu: [],
       },
       {
-        key: 'process.oppurtunities',
-        path: `${PROCESS_PREFIX_PATH}/oppurtunities`,
+        key: 'process.opportunities',
+        path: `${PROCESS_PREFIX_PATH}/opportunities`,
         title: 'Oppurtunities',
-        translateKey: 'nav.oppurtunities',
-        icon: 'oppurtunities',
+        translateKey: 'nav.opportunities',
+        icon: 'opportunities',
         type: NAV_ITEM_TYPE_ITEM,
         authority: [ADMIN, USER],
         meta: {
           description: {
-            translateKey: 'nav.eventsDesc',
-            label: 'Events List',
+            translateKey: 'nav.opportunitiesDesc',
+            label: 'Opportunities List',
           },
         },
         subMenu: [],
@@ -75,8 +75,8 @@ const processNavigationConfig: NavigationTree[] = [
         authority: [ADMIN, USER],
         meta: {
           description: {
-            translateKey: 'nav.eventsDesc',
-            label: 'Events List',
+            translateKey: 'nav.ticketsDesc',
+            label: 'Tickets List',
           },
         },
         subMenu: [],

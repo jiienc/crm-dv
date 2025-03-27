@@ -121,7 +121,7 @@ function DataTable<T>(props: DataTableProps<T>) {
         onPaginationChange,
         onSelectChange,
         onSort,
-        pageSizes = [10, 25, 50, 100],
+        pageSizes = [10, 20, 30],
         selectable = false,
         skeletonAvatarProps,
         pagingData = {
@@ -144,7 +144,7 @@ function DataTable<T>(props: DataTableProps<T>) {
         () =>
             pageSizes.map((number) => ({
                 value: number,
-                label: `${number} / page`,
+                label: `${number} items`,
             })),
         [pageSizes],
     )

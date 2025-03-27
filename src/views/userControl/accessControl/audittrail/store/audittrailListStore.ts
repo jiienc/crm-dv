@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { TableQueries } from '@/@types/common'
-import type { AuditTrail, Filter } from '../types'
+import type { AuditTrail } from '../types'
 
 export const initialTableData: TableQueries = {
     pageIndex: 1,
@@ -12,25 +12,12 @@ export const initialTableData: TableQueries = {
     },
 }
 
-export const initialFilterData = {
-    purchasedProducts: '',
-    purchaseChannel: [
-        'Retail Stores',
-        'Online Retailers',
-        'Resellers',
-        'Mobile Apps',
-        'Direct Sales',
-    ],
-}
-
 export type AuditTrailListState = {
     tableData: TableQueries
-    filterData: Filter
     selectedAuditTrail: Partial<AuditTrail>[]
 }
 
 type AuditTrailListAction = {
-    setFilterData: (payload: Filter) => void
     setTableData: (payload: TableQueries) => void
     setSelectedAuditTrail: (checked: boolean, audittrail: AuditTrail) => void
     setSelectAllAuditTrail: (audittrail: AuditTrail[]) => void
@@ -38,7 +25,6 @@ type AuditTrailListAction = {
 
 const initialState: AuditTrailListState = {
     tableData: initialTableData,
-    filterData: initialFilterData,
     selectedAuditTrail: [],
 }
 
@@ -46,7 +32,6 @@ export const useAuditTrailListStore = create<
     AuditTrailListState & AuditTrailListAction
 >((set) => ({
     ...initialState,
-    setFilterData: (payload) => set(() => ({ filterData: payload })),
     setTableData: (payload) => set(() => ({ tableData: payload })),
     setSelectedAuditTrail: (checked, row) =>
         set((state) => {
@@ -55,11 +40,11 @@ export const useAuditTrailListStore = create<
                 return { selectedAuditTrail: [...prevData, ...[row]] }
             } else {
                 if (
-                    prevData.some((prevAuditTrail) => row.id === prevAuditTrail.id)
+                    prevData.some((prevAuditTrail) => row.name === prevAuditTrail.name)
                 ) {
                     return {
                         selectedAuditTrail: prevData.filter(
-                            (prevAuditTrail) => prevAuditTrail.id !== row.id,
+                            (prevAuditTrail) => prevAuditTrail.name !== row.name,
                         ),
                     }
                 }

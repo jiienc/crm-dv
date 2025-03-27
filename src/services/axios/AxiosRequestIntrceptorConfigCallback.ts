@@ -11,7 +11,7 @@ const AxiosRequestIntrceptorConfigCallback = (
 ) => {
   const storage = appConfig.accessTokenPersistStrategy
 
-  let accessToken = import.meta.env.VITE_ACCESS_TOKEN;
+  let accessToken = `${import.meta.env.VITE_FRAPPE_API_KEY || ''}:${import.meta.env.VITE_FRAPPE_API_SECRET || ''}`
 
   if (storage === 'localStorage') {
     accessToken = localStorage.getItem(TOKEN_NAME_IN_STORAGE) || ''

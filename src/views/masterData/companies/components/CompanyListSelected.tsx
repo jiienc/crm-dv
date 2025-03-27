@@ -31,7 +31,7 @@ const CompanyListSelected = () => {
     setSelectAllCompany([])
     mutate(
       {
-        list: newCompanyList,
+        data: newCompanyList,
         total: companyListTotal - selectedCompany.length,
       },
       false,

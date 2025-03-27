@@ -1,28 +1,18 @@
 import { useMemo } from 'react'
-import Avatar from '@/components/ui/Avatar'
-// import Tag from '@/components/ui/Tag'
-import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useAttendanceList from '../hooks/useAttendanceList'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
-import { TbPencil, TbEye } from 'react-icons/tb'
 import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Attendance } from '../types'
 import type { TableQueries } from '@/@types/common'
 
-// const statusColor: Record<string, string> = {
-//     active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-//     blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
-// }
-
 const NameColumn = ({ row }: { row: Attendance }) => {
   return (
     <div className="flex items-center">
-      <Avatar size={40} shape="circle" src={row.img} />
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/attendance/attendance-details/${row.id}`}
+        to={`/concepts/attendance/attendance-details/${row.name}`}
       >
         {row.name}
       </Link>
@@ -30,40 +20,7 @@ const NameColumn = ({ row }: { row: Attendance }) => {
   )
 }
 
-const ActionColumn = ({
-  onEdit,
-  onViewDetail,
-}: {
-  onEdit: () => void
-  onViewDetail: () => void
-}) => {
-  return (
-    <div className="flex items-center gap-3">
-      <Tooltip title="Edit">
-        <div
-          className={`text-xl cursor-pointer select-none font-semibold`}
-          role="button"
-          onClick={onEdit}
-        >
-          <TbPencil />
-        </div>
-      </Tooltip>
-      <Tooltip title="View">
-        <div
-          className={`text-xl cursor-pointer select-none font-semibold`}
-          role="button"
-          onClick={onViewDetail}
-        >
-          <TbEye />
-        </div>
-      </Tooltip>
-    </div>
-  )
-}
-
 const AttendanceListTable = () => {
-  const navigate = useNavigate()
-
   const {
     attendanceList,
     attendanceListTotal,
@@ -75,69 +32,65 @@ const AttendanceListTable = () => {
     selectedAttendance,
   } = useAttendanceList()
 
-  const handleEdit = (attendance: Attendance) => {
-    navigate(`/concepts/attendance/attendance-edit/${attendance.id}`)
-  }
-
-  const handleViewDetails = (attendance: Attendance) => {
-    navigate(`/concepts/attendance/attendance-details/${attendance.id}`)
-  }
-
   const columns: ColumnDef<Attendance>[] = useMemo(
     () => [
       {
-        header: 'id',
-        accessorKey: 'personalInfo.id',
-      },
-      {
-        header: 'Name',
+        header: 'Fullname',
         accessorKey: 'name',
         cell: (props) => {
           const row = props.row.original
           return <NameColumn row={row} />
         },
       },
-      // {
-      //     header: 'Email',
-      //     accessorKey: 'email',
-      // },
       {
-        header: 'address',
-        accessorKey: 'personalInfo.location',
+        header: 'On Time',
+        accessorKey: 'ontime',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
       },
-      // {
-      //     header: 'Status',
-      //     accessorKey: 'status',
-      //     cell: (props) => {
-      //         const row = props.row.original
-      //         return (
-      //             <div className="flex items-center">
-      //                 <Tag className={statusColor[row.status]}>
-      //                     <span className="capitalize">{row.status}</span>
-      //                 </Tag>
-      //             </div>
-      //         )
-      //     },
-      // },
-      // {
-      //     header: 'Spent',
-      //     accessorKey: 'totalSpending',
-      //     cell: (props) => {
-      //         return <span>${props.row.original.totalSpending}</span>
-      //     },
-      // },
       {
-        header: '',
-        id: 'action',
-        cell: (props) => (
-          <ActionColumn
-            onEdit={() => handleEdit(props.row.original)}
-            onViewDetail={() => handleViewDetails(props.row.original)}
-          />
-        ),
+        header: 'Checked In',
+        accessorKey: 'checked_in',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
       },
+      {
+        header: 'Late Checkin',
+        accessorKey: 'late_checkin',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      },
+      {
+        header: 'Early Checkout',
+        accessorKey: 'early_checkout',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      },
+      {
+        header: 'Late and Early',
+        accessorKey: 'late_and_early',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      },
+      {
+        header: 'Active Days',
+        accessorKey: 'active_days',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <NameColumn row={row} />
+        // },
+      }
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 
@@ -195,7 +148,7 @@ const AttendanceListTable = () => {
         pageSize: tableData.pageSize as number,
       }}
       checkboxChecked={(row) =>
-        selectedAttendance.some((selected) => selected.id === row.id)
+        selectedAttendance.some((selected) => selected.name === row.name)
       }
       onPaginationChange={handlePaginationChange}
       onSelectChange={handleSelectChange}

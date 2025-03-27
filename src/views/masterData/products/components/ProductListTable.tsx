@@ -1,11 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
-import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import useProductList from '../hooks/useProductList'
 import cloneDeep from 'lodash/cloneDeep'
 import { Link, useNavigate } from 'react-router-dom'
-import { TbPencil, TbTrash } from 'react-icons/tb'
+import { TbPencil, TbEye } from 'react-icons/tb'
 import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Product } from '../types'
 import type { TableQueries } from '@/@types/common'
@@ -15,7 +14,7 @@ const NameColumn = ({ row }: { row: Product }) => {
     <div className="flex items-center">
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/customers/customer-details/${row.item_code}`}
+        to={`/concepts/products/product-details/${row.item_code}`}
       >
         {row.item_code}
       </Link>
@@ -31,15 +30,47 @@ const ItemGroupColumn = ({ row }: { row: Product }) => {
   )
 }
 
+const RmcColumn = ({ row }: { row: Product }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.variant_based_on}</p>
+    </div>
+  )
+}
+
+// const UnitColumn = ({ row }: { row: Product }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.unit}</p>
+//     </div>
+//   )
+// }
+
+const ClassificationColumn = ({ row }: { row: Product }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.asset_category}</p>
+    </div>
+  )
+}
+
+// const CompCodeColumn = ({ row }: { row: Product }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.company_code}</p>
+//     </div>
+//   )
+// }
+
 const ActionColumn = ({
   onEdit,
-  onDelete,
+  onViewDetail,
 }: {
   onEdit: () => void
-  onDelete: () => void
+  onViewDetail: () => void
 }) => {
   return (
-    <div className="flex items-center justify-end gap-3">
+    <div className="flex items-center gap-3">
       <Tooltip title="Edit">
         <div
           className={`text-xl cursor-pointer select-none font-semibold`}
@@ -49,13 +80,13 @@ const ActionColumn = ({
           <TbPencil />
         </div>
       </Tooltip>
-      <Tooltip title="Delete">
+      <Tooltip title="View">
         <div
           className={`text-xl cursor-pointer select-none font-semibold`}
           role="button"
-          onClick={onDelete}
+          onClick={onViewDetail}
         >
-          <TbTrash />
+          <TbEye />
         </div>
       </Tooltip>
     </div>
@@ -64,38 +95,6 @@ const ActionColumn = ({
 
 const ProductListTable = () => {
   const navigate = useNavigate()
-
-  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false)
-  const [toDeleteId, setToDeleteId] = useState('')
-
-  const handleCancel = () => {
-    setDeleteConfirmationOpen(false)
-  }
-
-  const handleDelete = (product: Product) => {
-    setDeleteConfirmationOpen(true)
-    setToDeleteId(product.name)
-  }
-
-  const handleEdit = (product: Product) => {
-    navigate(`/concepts/products/product-edit/${product.name}`)
-  }
-
-  const handleConfirmDelete = () => {
-    const newProductList = productList.filter((product) => {
-      return !(toDeleteId === product.name)
-    })
-    setSelectAllProduct([])
-    mutate(
-      {
-        data: newProductList,
-        total: productListTotal - selectedProduct.length,
-      },
-      false,
-    )
-    setDeleteConfirmationOpen(false)
-    setToDeleteId('')
-  }
 
   const {
     productList,
@@ -106,8 +105,15 @@ const ProductListTable = () => {
     setSelectAllProduct,
     setSelectedProduct,
     selectedProduct,
-    mutate,
   } = useProductList()
+
+  const handleEdit = (product: Product) => {
+    navigate(`/concepts/products/product-edit/${product.name}`)
+  }
+
+  const handleViewDetails = (product: Product) => {
+    navigate(`/concepts/products/product-details/${product.name}`)
+  }
 
   const columns: ColumnDef<Product>[] = useMemo(
     () => [
@@ -128,12 +134,44 @@ const ProductListTable = () => {
         },
       },
       {
+        header: 'RMC',
+        accessorKey: 'variant_based_on',
+        cell: (props) => {
+          const row = props.row.original
+          return <RmcColumn row={row} />
+        },
+      },
+      {
+        header: 'Unit',
+        accessorKey: 'unit',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <UnitColumn row={row} />
+        // },
+      },
+      {
+        header: 'Classification',
+        accessorKey: 'asset_category',
+        cell: (props) => {
+          const row = props.row.original
+          return <ClassificationColumn row={row} />
+        },
+      },
+      {
+        header: 'Company Code',
+        accessorKey: 'company_code',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <CompCodeColumn row={row} />
+        // },
+      },
+      {
         header: 'Action',
         id: 'action',
         cell: (props) => (
           <ActionColumn
             onEdit={() => handleEdit(props.row.original)}
-            onDelete={() => handleDelete(props.row.original)}
+            onViewDetail={() => handleViewDetails(props.row.original)}
           />
         ),
       },
@@ -182,45 +220,28 @@ const ProductListTable = () => {
   }
 
   return (
-    <>
-      <DataTable
-        selectable
-        columns={columns}
-        data={productList}
-        noData={!isLoading && productList.length === 0}
-        skeletonAvatarColumns={[0]}
-        skeletonAvatarProps={{ width: 28, height: 28 }}
-        loading={isLoading}
-        pagingData={{
-          total: productListTotal,
-          pageIndex: tableData.pageIndex as number,
-          pageSize: tableData.pageSize as number,
-        }}
-        checkboxChecked={(row) =>
-          selectedProduct.some((selected) => selected.name === row.name)
-        }
-        onPaginationChange={handlePaginationChange}
-        onSelectChange={handleSelectChange}
-        onSort={handleSort}
-        onCheckBoxChange={handleRowSelect}
-        onIndeterminateCheckBoxChange={handleAllRowSelect}
-      />
-      <ConfirmDialog
-        isOpen={deleteConfirmationOpen}
-        type="danger"
-        title="Remove products"
-        onClose={handleCancel}
-        onRequestClose={handleCancel}
-        onCancel={handleCancel}
-        onConfirm={handleConfirmDelete}
-      >
-        <p>
-          {' '}
-          Are you sure you want to remove this product? This action can&apos;t
-          be undo.{' '}
-        </p>
-      </ConfirmDialog>
-    </>
+    <DataTable
+      selectable
+      columns={columns}
+      data={productList}
+      noData={!isLoading && productList.length === 0}
+      skeletonAvatarColumns={[0]}
+      skeletonAvatarProps={{ width: 28, height: 28 }}
+      loading={isLoading}
+      pagingData={{
+        total: productListTotal,
+        pageIndex: tableData.pageIndex as number,
+        pageSize: tableData.pageSize as number,
+      }}
+      checkboxChecked={(row) =>
+        selectedProduct.some((selected) => selected.name === row.name)
+      }
+      onPaginationChange={handlePaginationChange}
+      onSelectChange={handleSelectChange}
+      onSort={handleSort}
+      onCheckBoxChange={handleRowSelect}
+      onIndeterminateCheckBoxChange={handleAllRowSelect}
+    />
   )
 }
 

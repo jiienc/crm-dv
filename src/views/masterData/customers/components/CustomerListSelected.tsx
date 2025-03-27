@@ -33,7 +33,7 @@ const CustomerListSelected = () => {
     setSelectAllCustomer([])
     mutate(
       {
-        list: newCustomerList,
+        data: newCustomerList,
         total: customerListTotal - selectedCustomer.length,
       },
       false,

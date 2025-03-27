@@ -1,8 +1,8 @@
 import ModeSwitcher from './ModeSwitcher'
-// import LayoutSwitcher from './LayoutSwitcher'
-// import ThemeSwitcher from './ThemeSwitcher'
-// import DirectionSwitcher from './DirectionSwitcher'
-// import CopyButton from './CopyButton'
+import LayoutSwitcher from './LayoutSwitcher'
+import ThemeSwitcher from './ThemeSwitcher'
+import DirectionSwitcher from './DirectionSwitcher'
+import CopyButton from './CopyButton'
 
 export type ThemeConfiguratorProps = {
   callBackClose?: () => void
@@ -19,23 +19,23 @@ const ThemeConfigurator = ({ callBackClose }: ThemeConfiguratorProps) => {
           </div>
           <ModeSwitcher />
         </div>
-        {/* <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
                     <div>
                         <h6>Direction</h6>
                         <span>Select a direction</span>
                     </div>
                     <DirectionSwitcher callBackClose={callBackClose} />
-                </div> */}
-        {/* <div>
+                </div>
+        <div>
                     <h6 className="mb-3">Theme</h6>
                     <ThemeSwitcher />
-                </div> */}
-        {/* <div>
+                </div>
+        <div>
                     <h6 className="mb-3">Layout</h6>
                     <LayoutSwitcher />
-                </div> */}
+                </div>
       </div>
-      {/* <CopyButton /> */}
+      <CopyButton />
     </div>
   )
 }

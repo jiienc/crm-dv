@@ -6,23 +6,23 @@ import ProductImprovementListTableTools from './components/ProductImprovementLis
 import ProductImprovementListSelected from './components/ProductImprovementListSelected'
 
 const ProductImprovementList = () => {
-    return (
-        <>
-            <Container>
-                <AdaptiveCard>
-                    <div className="flex flex-col gap-4">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                            <h3>ProductImprovement</h3>
-                            <ProductImprovementListActionTools />
-                        </div>
-                        <ProductImprovementListTableTools />
-                        <ProductImprovementListTable />
-                    </div>
-                </AdaptiveCard>
-            </Container>
-            <ProductImprovementListSelected />
-        </>
-    )
+  return (
+    <>
+      <Container>
+        <AdaptiveCard>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+              <h3>ProductImprovement</h3>
+              <ProductImprovementListActionTools />
+            </div>
+            <ProductImprovementListTableTools />
+            <ProductImprovementListTable />
+          </div>
+        </AdaptiveCard>
+      </Container>
+      <ProductImprovementListSelected />
+    </>
+  )
 }
 
 export default ProductImprovementList

@@ -1,6 +1,4 @@
 import { useMemo } from 'react'
-import Avatar from '@/components/ui/Avatar'
-// import Tag from '@/components/ui/Tag'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useUsersList from '../hooks/useUsersList'
@@ -11,24 +9,58 @@ import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Users } from '../types'
 import type { TableQueries } from '@/@types/common'
 
-// const statusColor: Record<string, string> = {
-//     active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-//     blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
-// }
-
 const NameColumn = ({ row }: { row: Users }) => {
   return (
     <div className="flex items-center">
-      <Avatar size={40} shape="circle" src={row.img} />
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/users/users-details/${row.id}`}
+        to={`/concepts/users/users-details/${row.name}`}
       >
-        {row.name}
+        {row.username}
       </Link>
     </div>
   )
 }
+
+const EmailColumn = ({ row }: { row: Users }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.email}</p>
+    </div>
+  )
+}
+
+const PhoneColumn = ({ row }: { row: Users }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.phone}</p>
+    </div>
+  )
+}
+
+const FullnameColumn = ({ row }: { row: Users }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.full_name}</p>
+    </div>
+  )
+}
+
+const AccessGroupColumn = ({ row }: { row: Users }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.role_profile_name}</p>
+    </div>
+  )
+}
+
+// const HierarchyColumn = ({ row }: { row: Users }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.hierarchy}</p>
+//     </div>
+//   )
+// }
 
 const ActionColumn = ({
   onEdit,
@@ -76,58 +108,65 @@ const UsersListTable = () => {
   } = useUsersList()
 
   const handleEdit = (users: Users) => {
-    navigate(`/concepts/users/users-edit/${users.id}`)
+    navigate(`/concepts/users/users-edit/${users.name}`)
   }
 
   const handleViewDetails = (users: Users) => {
-    navigate(`/concepts/users/users-details/${users.id}`)
+    navigate(`/concepts/users/users-details/${users.name}`)
   }
 
   const columns: ColumnDef<Users>[] = useMemo(
     () => [
       {
-        header: 'id',
-        accessorKey: 'personalInfo.id',
-      },
-      {
-        header: 'Name',
-        accessorKey: 'name',
+        header: 'Username',
+        accessorKey: 'username',
         cell: (props) => {
           const row = props.row.original
           return <NameColumn row={row} />
         },
       },
-      // {
-      //     header: 'Email',
-      //     accessorKey: 'email',
-      // },
       {
-        header: 'address',
-        accessorKey: 'personalInfo.location',
+        header: 'Email',
+        accessorKey: 'email',
+        cell: (props) => {
+          const row = props.row.original
+          return <EmailColumn row={row} />
+        },
       },
-      // {
-      //     header: 'Status',
-      //     accessorKey: 'status',
-      //     cell: (props) => {
-      //         const row = props.row.original
-      //         return (
-      //             <div className="flex items-center">
-      //                 <Tag className={statusColor[row.status]}>
-      //                     <span className="capitalize">{row.status}</span>
-      //                 </Tag>
-      //             </div>
-      //         )
-      //     },
-      // },
-      // {
-      //     header: 'Spent',
-      //     accessorKey: 'totalSpending',
-      //     cell: (props) => {
-      //         return <span>${props.row.original.totalSpending}</span>
-      //     },
-      // },
       {
-        header: '',
+        header: 'Phone',
+        accessorKey: 'email',
+        cell: (props) => {
+          const row = props.row.original
+          return <PhoneColumn row={row} />
+        },
+      },
+      {
+        header: 'Fullname',
+        accessorKey: 'full_name',
+        cell: (props) => {
+          const row = props.row.original
+          return <FullnameColumn row={row} />
+        },
+      },
+      {
+        header: 'Access Group',
+        accessorKey: 'role_profile_name',
+        cell: (props) => {
+          const row = props.row.original
+          return <AccessGroupColumn row={row} />
+        },
+      },
+      {
+        header: 'Hierarchy',
+        accessorKey: 'hierarchy',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <HierarchyColumn row={row} />
+        // },
+      },
+      {
+        header: 'Action',
         id: 'action',
         cell: (props) => (
           <ActionColumn
@@ -195,7 +234,7 @@ const UsersListTable = () => {
         pageSize: tableData.pageSize as number,
       }}
       checkboxChecked={(row) =>
-        selectedUsers.some((selected) => selected.id === row.id)
+        selectedUsers.some((selected) => selected.name === row.name)
       }
       onPaginationChange={handlePaginationChange}
       onSelectChange={handleSelectChange}

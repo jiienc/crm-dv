@@ -5,42 +5,38 @@ import type { GetUsersListResponse } from '../types'
 import type { TableQueries } from '@/@types/common'
 
 export default function useUsersList() {
-    const {
-        tableData,
-        filterData,
-        setTableData,
-        selectedUsers,
-        setSelectedUsers,
-        setSelectAllUsers,
-        setFilterData,
-    } = useUsersListStore((state) => state)
+  const {
+    tableData,
+    setTableData,
+    selectedUsers,
+    setSelectedUsers,
+    setSelectAllUsers,
+  } = useUsersListStore((state) => state)
 
-    const { data, error, isLoading, mutate } = useSWR(
-        ['/api/users', { ...tableData, ...filterData }],
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, params]) =>
-            apiGetUsersList<GetUsersListResponse, TableQueries>(params),
-        {
-            revalidateOnFocus: false,
-        },
-    )
+  const { data, error, isLoading, mutate } = useSWR(
+    ['/resource/User', { ...tableData }],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ([_, params]) =>
+      apiGetUsersList<GetUsersListResponse, TableQueries>(params),
+    {
+      revalidateOnFocus: false,
+    },
+  )
 
-    const usersList = data?.list || []
+  const usersList = data?.data || []
 
-    const usersListTotal = data?.total || 0
+  const usersListTotal = data?.total || usersList.length || 0
 
-    return {
-        usersList,
-        usersListTotal,
-        error,
-        isLoading,
-        tableData,
-        filterData,
-        mutate,
-        setTableData,
-        selectedUsers,
-        setSelectedUsers,
-        setSelectAllUsers,
-        setFilterData,
-    }
+  return {
+    usersList,
+    usersListTotal,
+    error,
+    isLoading,
+    tableData,
+    mutate,
+    setTableData,
+    selectedUsers,
+    setSelectedUsers,
+    setSelectAllUsers,
+  }
 }

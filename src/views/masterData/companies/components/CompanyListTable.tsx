@@ -14,9 +14,9 @@ const NameColumn = ({ row }: { row: Company }) => {
     <div className="flex items-center">
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/companys/company-details/${row.company_name}`}
+        to={`/concepts/companys/company-details/${row.name}`}
       >
-        {row.name}
+        {row.company_name}
       </Link>
     </div>
   )
@@ -30,6 +30,14 @@ const PhoneColumn = ({ row }: { row: Company }) => {
   )
 }
 
+// const PicColumn = ({ row }: { row: Company }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.pic}</p>
+//     </div>
+//   )
+// }
+
 const EmailColumn = ({ row }: { row: Company }) => {
   return (
     <div className="flex items-center">
@@ -37,6 +45,14 @@ const EmailColumn = ({ row }: { row: Company }) => {
     </div>
   )
 }
+
+// const AssignedColumn = ({ row }: { row: Company }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.assigned}</p>
+//     </div>
+//   )
+// }
 
 const ActionColumn = ({
   onEdit,
@@ -94,8 +110,8 @@ const CompanyListTable = () => {
   const columns: ColumnDef<Company>[] = useMemo(
     () => [
       {
-        header: 'Company Name',
-        accessorKey: 'name',
+        header: 'Company',
+        accessorKey: 'company_name',
         cell: (props) => {
           const row = props.row.original
           return <NameColumn row={row} />
@@ -110,12 +126,28 @@ const CompanyListTable = () => {
         },
       },
       {
+        header: 'PIC',
+        accessorKey: 'pic',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <PicColumn row={row} />
+        // },
+      },
+      {
         header: 'Email',
         accessorKey: 'email',
         cell: (props) => {
           const row = props.row.original
           return <EmailColumn row={row} />
         },
+      },
+      {
+        header: 'Assigned',
+        accessorKey: 'assigned',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <AssignedColumn row={row} />
+        // },
       },
       {
         header: 'Action',

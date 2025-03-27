@@ -5,42 +5,38 @@ import type { GetNewProductListResponse } from '../types'
 import type { TableQueries } from '@/@types/common'
 
 export default function useNewProductList() {
-    const {
-        tableData,
-        filterData,
-        setTableData,
-        selectedNewProduct,
-        setSelectedNewProduct,
-        setSelectAllNewProduct,
-        setFilterData,
-    } = useNewProductListStore((state) => state)
+  const {
+    tableData,
+    setTableData,
+    selectedNewProduct,
+    setSelectedNewProduct,
+    setSelectAllNewProduct,
+  } = useNewProductListStore((state) => state)
 
-    const { data, error, isLoading, mutate } = useSWR(
-        ['/api/newproduct', { ...tableData, ...filterData }],
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, params]) =>
-            apiGetNewProductList<GetNewProductListResponse, TableQueries>(params),
-        {
-            revalidateOnFocus: false,
-        },
-    )
+  const { data, error, isLoading, mutate } = useSWR(
+    ['/resource/NewProduct', { ...tableData }],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ([_, params]) =>
+      apiGetNewProductList<GetNewProductListResponse, TableQueries>(params),
+    {
+      revalidateOnFocus: false,
+    },
+  )
 
-    const newproductList = data?.list || []
+  const newproductList = data?.data || []
 
-    const newproductListTotal = data?.total || 0
+  const newproductListTotal = data?.total || newproductList.length || 0
 
-    return {
-        newproductList,
-        newproductListTotal,
-        error,
-        isLoading,
-        tableData,
-        filterData,
-        mutate,
-        setTableData,
-        selectedNewProduct,
-        setSelectedNewProduct,
-        setSelectAllNewProduct,
-        setFilterData,
-    }
+  return {
+    newproductList,
+    newproductListTotal,
+    error,
+    isLoading,
+    tableData,
+    mutate,
+    setTableData,
+    selectedNewProduct,
+    setSelectedNewProduct,
+    setSelectAllNewProduct,
+  }
 }

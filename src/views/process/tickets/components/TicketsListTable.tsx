@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
-import Avatar from '@/components/ui/Avatar'
-// import Tag from '@/components/ui/Tag'
+import Tag from '@/components/ui/Tag'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useTicketsList from '../hooks/useTicketsList'
@@ -11,24 +10,47 @@ import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Tickets } from '../types'
 import type { TableQueries } from '@/@types/common'
 
-// const statusColor: Record<string, string> = {
-//     active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-//     blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
-// }
+const statusColor: Record<string, string> = {
+    active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
+    blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
+}
 
 const NameColumn = ({ row }: { row: Tickets }) => {
   return (
     <div className="flex items-center">
-      <Avatar size={40} shape="circle" src={row.img} />
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/tickets/tickets-details/${row.id}`}
+        to={`/concepts/tickets/tickets-details/${row.name}`}
       >
         {row.name}
       </Link>
     </div>
   )
 }
+
+// const ProductCodeColumn = ({ row }: { row: Tickets }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.product_code}</p>
+//     </div>
+//   )
+// }
+
+// const CompanyColumn = ({ row }: { row: Tickets }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.company}</p>
+//     </div>
+//   )
+// }
+
+// const PriorityColumn = ({ row }: { row: Tickets }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.priority}</p>
+//     </div>
+//   )
+// }
 
 const ActionColumn = ({
   onEdit,
@@ -76,19 +98,15 @@ const TicketsListTable = () => {
   } = useTicketsList()
 
   const handleEdit = (tickets: Tickets) => {
-    navigate(`/concepts/tickets/tickets-edit/${tickets.id}`)
+    navigate(`/concepts/tickets/tickets-edit/${tickets.name}`)
   }
 
   const handleViewDetails = (tickets: Tickets) => {
-    navigate(`/concepts/tickets/tickets-details/${tickets.id}`)
+    navigate(`/concepts/tickets/tickets-details/${tickets.name}`)
   }
 
   const columns: ColumnDef<Tickets>[] = useMemo(
     () => [
-      {
-        header: 'id',
-        accessorKey: 'personalInfo.id',
-      },
       {
         header: 'Name',
         accessorKey: 'name',
@@ -97,37 +115,46 @@ const TicketsListTable = () => {
           return <NameColumn row={row} />
         },
       },
-      // {
-      //     header: 'Email',
-      //     accessorKey: 'email',
-      // },
       {
-        header: 'address',
-        accessorKey: 'personalInfo.location',
+        header: 'Product Code',
+        accessorKey: 'product_code',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <ProductCodeColumn row={row} />
+        // },
       },
-      // {
-      //     header: 'Status',
-      //     accessorKey: 'status',
-      //     cell: (props) => {
-      //         const row = props.row.original
-      //         return (
-      //             <div className="flex items-center">
-      //                 <Tag className={statusColor[row.status]}>
-      //                     <span className="capitalize">{row.status}</span>
-      //                 </Tag>
-      //             </div>
-      //         )
-      //     },
-      // },
-      // {
-      //     header: 'Spent',
-      //     accessorKey: 'totalSpending',
-      //     cell: (props) => {
-      //         return <span>${props.row.original.totalSpending}</span>
-      //     },
-      // },
       {
-        header: '',
+        header: 'Company',
+        accessorKey: 'company',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <CompanyCodeColumn row={row} />
+        // },
+      },
+      {
+          header: 'Status',
+          accessorKey: 'status',
+          cell: (props) => {
+              const row = props.row.original
+              return (
+                  <div className="flex items-center">
+                      <Tag className={statusColor[row.status]}>
+                          <span className="capitalize">{row.status}</span>
+                      </Tag>
+                  </div>
+              )
+          },
+      },
+      {
+        header: 'Priority',
+        accessorKey: 'priority',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <PriorityColumn row={row} />
+        // },
+      },
+      {
+        header: 'Action',
         id: 'action',
         cell: (props) => (
           <ActionColumn
@@ -195,7 +222,7 @@ const TicketsListTable = () => {
         pageSize: tableData.pageSize as number,
       }}
       checkboxChecked={(row) =>
-        selectedTickets.some((selected) => selected.id === row.id)
+        selectedTickets.some((selected) => selected.name === row.name)
       }
       onPaginationChange={handlePaginationChange}
       onSelectChange={handleSelectChange}

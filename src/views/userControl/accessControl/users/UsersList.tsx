@@ -6,23 +6,23 @@ import UsersListTableTools from './components/UsersListTableTools'
 import UsersListSelected from './components/UsersListSelected'
 
 const UsersList = () => {
-    return (
-        <>
-            <Container>
-                <AdaptiveCard>
-                    <div className="flex flex-col gap-4">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                            <h3>Users</h3>
-                            <UsersListActionTools />
-                        </div>
-                        <UsersListTableTools />
-                        <UsersListTable />
-                    </div>
-                </AdaptiveCard>
-            </Container>
-            <UsersListSelected />
-        </>
-    )
+  return (
+    <>
+      <Container>
+        <AdaptiveCard>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+              <h3>Users</h3>
+              <UsersListActionTools />
+            </div>
+            <UsersListTableTools />
+            <UsersListTable />
+          </div>
+        </AdaptiveCard>
+      </Container>
+      <UsersListSelected />
+    </>
+  )
 }
 
 export default UsersList

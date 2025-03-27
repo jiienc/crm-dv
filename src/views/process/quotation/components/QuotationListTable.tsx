@@ -1,6 +1,4 @@
 import { useMemo } from 'react'
-import Avatar from '@/components/ui/Avatar'
-// import Tag from '@/components/ui/Tag'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useQuotationList from '../hooks/useQuotationList'
@@ -11,24 +9,50 @@ import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Quotation } from '../types'
 import type { TableQueries } from '@/@types/common'
 
-// const statusColor: Record<string, string> = {
-//     active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-//     blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
-// }
-
 const NameColumn = ({ row }: { row: Quotation }) => {
   return (
     <div className="flex items-center">
-      <Avatar size={40} shape="circle" src={row.img} />
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/quotation/quotation-details/${row.id}`}
+        to={`/concepts/quotation/quotation-details/${row.name}`}
       >
         {row.name}
       </Link>
     </div>
   )
 }
+
+// const OpportunityColumn = ({ row }: { row: Quotation }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.opportunity}</p>
+//     </div>
+//   )
+// }
+
+// const PicColumn = ({ row }: { row: Quotation }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.pic}</p>
+//     </div>
+//   )
+// }
+
+// const PoColumn = ({ row }: { row: Quotation }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.po_number}</p>
+//     </div>
+//   )
+// }
+
+// const SoColumn = ({ row }: { row: Quotation }) => {
+//   return (
+//     <div className="flex items-center">
+//       <p>{row.so_number}</p>
+//     </div>
+//   )
+// }
 
 const ActionColumn = ({
   onEdit,
@@ -76,58 +100,57 @@ const QuotationListTable = () => {
   } = useQuotationList()
 
   const handleEdit = (quotation: Quotation) => {
-    navigate(`/concepts/quotation/quotation-edit/${quotation.id}`)
+    navigate(`/concepts/quotation/quotation-edit/${quotation.name}`)
   }
 
   const handleViewDetails = (quotation: Quotation) => {
-    navigate(`/concepts/quotation/quotation-details/${quotation.id}`)
+    navigate(`/concepts/quotation/quotation-details/${quotation.name}`)
   }
 
   const columns: ColumnDef<Quotation>[] = useMemo(
     () => [
       {
-        header: 'id',
-        accessorKey: 'personalInfo.id',
-      },
-      {
-        header: 'Name',
-        accessorKey: 'name',
+        header: 'Quotation Number',
+        accessorKey: 'quotation_number',
         cell: (props) => {
           const row = props.row.original
           return <NameColumn row={row} />
         },
       },
-      // {
-      //     header: 'Email',
-      //     accessorKey: 'email',
-      // },
       {
-        header: 'address',
-        accessorKey: 'personalInfo.location',
+        header: 'Opportunity',
+        accessorKey: 'opportunity',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <OpportunityColumn row={row} />
+        // },
       },
-      // {
-      //     header: 'Status',
-      //     accessorKey: 'status',
-      //     cell: (props) => {
-      //         const row = props.row.original
-      //         return (
-      //             <div className="flex items-center">
-      //                 <Tag className={statusColor[row.status]}>
-      //                     <span className="capitalize">{row.status}</span>
-      //                 </Tag>
-      //             </div>
-      //         )
-      //     },
-      // },
-      // {
-      //     header: 'Spent',
-      //     accessorKey: 'totalSpending',
-      //     cell: (props) => {
-      //         return <span>${props.row.original.totalSpending}</span>
-      //     },
-      // },
       {
-        header: '',
+        header: 'PIC',
+        accessorKey: 'pic',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <PicColumn row={row} />
+        // },
+      },
+      {
+        header: 'PO Number',
+        accessorKey: 'po_number',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <PoColumn row={row} />
+        // },
+      },
+      {
+        header: 'SO Number',
+        accessorKey: 'so_number',
+        // cell: (props) => {
+        //   const row = props.row.original
+        //   return <SoColumn row={row} />
+        // },
+      },
+      {
+        header: 'Action',
         id: 'action',
         cell: (props) => (
           <ActionColumn
@@ -195,7 +218,7 @@ const QuotationListTable = () => {
         pageSize: tableData.pageSize as number,
       }}
       checkboxChecked={(row) =>
-        selectedQuotation.some((selected) => selected.id === row.id)
+        selectedQuotation.some((selected) => selected.name === row.name)
       }
       onPaginationChange={handlePaginationChange}
       onSelectChange={handleSelectChange}

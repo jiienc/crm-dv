@@ -2,6 +2,7 @@ import { apiGetLeadsList } from '@/services/process-components/leads/LeadsServic
 import useSWR from 'swr'
 import { useLeadsListStore } from '../store/leadsListStore'
 import type { TableQueries } from '@/@types/common'
+import { GetLeadsListResponse } from '../types'
 
 export default function useLeadsList() {
   const {
@@ -15,21 +16,15 @@ export default function useLeadsList() {
   const { data, error, isLoading, mutate } = useSWR(
     ['/resource/Lead', { ...tableData }],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async ([_, params]) => {
-      try {
-        return await apiGetLeadsList<TableQueries>(params)
-      } catch (err) {
-        console.error('Error fetching leads:', err)
-        throw err
-      }
-    },
-    {
-      revalidateOnFocus: false,
-    },
+    ([_, params]) =>
+          apiGetLeadsList<GetLeadsListResponse, TableQueries>(params),
+        {
+          revalidateOnFocus: false,
+        },
   )
 
-  const leadsList = data?.data ?? []
-  const leadsListTotal = leadsList.length
+  const leadsList = data?.data || []
+  const leadsListTotal = data?.total || leadsList.length || 0
 
   return {
     leadsList,
