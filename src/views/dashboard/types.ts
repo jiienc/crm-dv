@@ -1,80 +1,68 @@
-export type Period = 'thisMonth' | 'thisWeek' | 'thisYear'
+export type SalesTypes = 'all' | 'coating' | 'nonCoating'
 
-export type PageViewData = {
-    pageUrl: string
-    views: number
+export type SalesCategory = 'salesValue' | 'salesVolume' | 'deltaP'
+
+export type Ticketing = {
+  id: string
+  name: string
+  productCode: string
+  created_at: string
+  status: string
 }
 
-export type DeviceSessionData = {
-    labels: string[]
-    series: number[]
-    percentage: number[]
+export type MeetingSchedules = {
+  id: string
+  name: string
+  company: string
+  time: string
+  status: string
 }
 
-export type TopChannelData = {
-    visitors: number
-    channels: {
-        id: string
-        name: string
-        img: string
-        total: number
-        percentage: number
-    }[]
+export type Leads = {
+  id: string
+  name: string
+  date: string
+  status: string
 }
 
-export type TopPageData = {
-    pageUrl: string
-    views: {
-        amount: number
-        growth: number
-    }
-    uniqueVisitor: {
-        amount: number
-        growth: number
-    }
+export type Projects = {
+  id: string
+  company: string
+  name: string
+  status: string
 }
 
-export type TrafficData = {
-    source: string
-    visits: number
-    uniqueVisitors: number
-    bounceRate: string
-    avgSessionDuration: string
-    progress: number
-}
-
-export type MetricsData = Record<
-    'visitors' | 'conversionRate' | 'adCampaignClicks',
-    {
-        value: number
-        growShrink: number
-    }
->
-
-export type WebAnalyticData = {
-    pageView: {
-        value: number
-        growShrink: number
-    }
-    avgTimeOnPage: {
-        value: string
-        growShrink: number
-    }
+export type SalesTypesData = {
+  value: number
+  chartData: {
     series: {
-        name: string
-        data: number[]
+      name: string
+      data: number[]
     }[]
     date: string[]
+  }
 }
 
-export type GetAnalyticDashboardResponse = Record<
-    Period,
-    {
-        metrics: MetricsData
-        webAnalytic: WebAnalyticData
-        traffic: TrafficData[]
-        topChannel: TopChannelData
-        deviceSession: DeviceSessionData
-        topPages: TopPageData[]
-    }
+export type salesOverview = Record<
+  SalesCategory,
+  Record<SalesTypes, SalesTypesData>
 >
+
+export type Order = {
+  id: string
+  date: number
+  customer: string
+  status: number
+  paymentMehod: string
+  paymentIdendifier: string
+  totalAmount: number
+}
+
+export type GetEcommerceDashboardResponse = {
+  salesOverview: salesOverview
+  recentOrders: Order[]
+  ticketing: Ticketing[]
+  meetingSchedules: MeetingSchedules[]
+  leads: Leads[]
+  projects: Projects[]
+}

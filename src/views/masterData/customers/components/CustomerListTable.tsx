@@ -4,7 +4,7 @@ import DataTable from '@/components/shared/DataTable'
 import useCustomerList from '../hooks/useCustomerList'
 import cloneDeep from 'lodash/cloneDeep'
 import { Link, useNavigate } from 'react-router-dom'
-import { TbPencil, TbEye } from 'react-icons/tb'
+import { TbEye } from 'react-icons/tb'
 import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Customer } from '../types'
 import type { TableQueries } from '@/@types/common'
@@ -14,7 +14,7 @@ const NameColumn = ({ row }: { row: Customer }) => {
     <div className="flex items-center">
       <Link
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/customers/customer-details/${row.name}`}
+        to={`/master-data/customers/customer-details/${row.name}`}
       >
         {row.customer_name}
       </Link>
@@ -23,39 +23,44 @@ const NameColumn = ({ row }: { row: Customer }) => {
 }
 
 const AddressColumn = ({ row }: { row: Customer }) => {
+  const formattedAddress = row.primary_address
+    .replace(/<br\s*\/?>/gi, ', ')
+    .replace(/\\n/g, '')
+    .replace(/\s*,\s*,*/g, ', ')
+    .replace(/^, |, $/g, '')
+    .trim()
+    .replace(/,+$/, '')
   return (
     <div className="flex items-center">
-      <p>{row.primary_address}</p>
+      <p className="truncate">{formattedAddress}</p>
     </div>
   )
 }
 
 const CustCodeColumn = ({ row }: { row: Customer }) => {
+  const creation = row.creation
+  let code = 'CUST-XXXX'
+
+  if (creation) {
+    const year = creation.slice(2, 4)
+    const micro = creation.split('.')[1]?.slice(-2) || '00'
+    code = `CUST-${year}${micro}`
+  }
+
   return (
     <div className="flex items-center">
-      <p>{row.customer_type}</p>
+      <p>{code}</p>
     </div>
   )
 }
 
 const ActionColumn = ({
-  onEdit,
   onViewDetail,
 }: {
-  onEdit: () => void
   onViewDetail: () => void
 }) => {
   return (
-    <div className="flex items-center gap-3">
-      <Tooltip title="Edit">
-        <div
-          className={`text-xl cursor-pointer select-none font-semibold`}
-          role="button"
-          onClick={onEdit}
-        >
-          <TbPencil />
-        </div>
-      </Tooltip>
+    <div className="flex items-center">
       <Tooltip title="View">
         <div
           className={`text-xl cursor-pointer select-none font-semibold`}
@@ -83,12 +88,8 @@ const CustomerListTable = () => {
     selectedCustomer,
   } = useCustomerList()
 
-  const handleEdit = (customer: Customer) => {
-    navigate(`/concepts/customers/customer-edit/${customer.name}`)
-  }
-
   const handleViewDetails = (customer: Customer) => {
-    navigate(`/concepts/customers/customer-details/${customer.name}`)
+    navigate(`/master-data/customers/customer-details/${customer.name}`)
   }
 
   const columns: ColumnDef<Customer>[] = useMemo(
@@ -122,7 +123,6 @@ const CustomerListTable = () => {
         id: 'action',
         cell: (props) => (
           <ActionColumn
-            onEdit={() => handleEdit(props.row.original)}
             onViewDetail={() => handleViewDetails(props.row.original)}
           />
         ),

@@ -3,21 +3,29 @@ import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useProductList from '../hooks/useProductList'
 import cloneDeep from 'lodash/cloneDeep'
-import { Link, useNavigate } from 'react-router-dom'
-import { TbPencil, TbEye } from 'react-icons/tb'
+import { useNavigate } from 'react-router-dom'
+import { TbPencil } from 'react-icons/tb'
 import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Product } from '../types'
 import type { TableQueries } from '@/@types/common'
 
 const NameColumn = ({ row }: { row: Product }) => {
+  const creation = row.creation
+  let code = 'ITEM-XXXX'
+
+  if (creation) {
+    const year = creation.slice(2, 4) // '25'
+    const micro = creation.split('.')[1]?.slice(-2) || '00' // '34'
+    code = `ITEM-${year}${micro}`
+  }
+
   return (
     <div className="flex items-center">
-      <Link
+      <p
         className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/products/product-details/${row.item_code}`}
       >
-        {row.item_code}
-      </Link>
+        {code}
+      </p>
     </div>
   )
 }
@@ -33,23 +41,23 @@ const ItemGroupColumn = ({ row }: { row: Product }) => {
 const RmcColumn = ({ row }: { row: Product }) => {
   return (
     <div className="flex items-center">
-      <p>{row.variant_based_on}</p>
+      <p>{row.standard_rate} USD</p>
     </div>
   )
 }
 
-// const UnitColumn = ({ row }: { row: Product }) => {
-//   return (
-//     <div className="flex items-center">
-//       <p>{row.unit}</p>
-//     </div>
-//   )
-// }
+const UnitColumn = ({ row }: { row: Product }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.stock_uom}</p>
+    </div>
+  )
+}
 
 const ClassificationColumn = ({ row }: { row: Product }) => {
   return (
     <div className="flex items-center">
-      <p>{row.asset_category}</p>
+      <p>{row.item_group.split(' ')[0]}</p>
     </div>
   )
 }
@@ -62,15 +70,9 @@ const ClassificationColumn = ({ row }: { row: Product }) => {
 //   )
 // }
 
-const ActionColumn = ({
-  onEdit,
-  onViewDetail,
-}: {
-  onEdit: () => void
-  onViewDetail: () => void
-}) => {
+const ActionColumn = ({ onEdit }: { onEdit: () => void }) => {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
       <Tooltip title="Edit">
         <div
           className={`text-xl cursor-pointer select-none font-semibold`}
@@ -78,15 +80,6 @@ const ActionColumn = ({
           onClick={onEdit}
         >
           <TbPencil />
-        </div>
-      </Tooltip>
-      <Tooltip title="View">
-        <div
-          className={`text-xl cursor-pointer select-none font-semibold`}
-          role="button"
-          onClick={onViewDetail}
-        >
-          <TbEye />
         </div>
       </Tooltip>
     </div>
@@ -108,11 +101,7 @@ const ProductListTable = () => {
   } = useProductList()
 
   const handleEdit = (product: Product) => {
-    navigate(`/concepts/products/product-edit/${product.name}`)
-  }
-
-  const handleViewDetails = (product: Product) => {
-    navigate(`/concepts/products/product-details/${product.name}`)
+    navigate(`/master-data/products/product-edit/${product.name}`)
   }
 
   const columns: ColumnDef<Product>[] = useMemo(
@@ -144,10 +133,10 @@ const ProductListTable = () => {
       {
         header: 'Unit',
         accessorKey: 'unit',
-        // cell: (props) => {
-        //   const row = props.row.original
-        //   return <UnitColumn row={row} />
-        // },
+        cell: (props) => {
+          const row = props.row.original
+          return <UnitColumn row={row} />
+        },
       },
       {
         header: 'Classification',
@@ -169,10 +158,7 @@ const ProductListTable = () => {
         header: 'Action',
         id: 'action',
         cell: (props) => (
-          <ActionColumn
-            onEdit={() => handleEdit(props.row.original)}
-            onViewDetail={() => handleViewDetails(props.row.original)}
-          />
+          <ActionColumn onEdit={() => handleEdit(props.row.original)} />
         ),
       },
     ],

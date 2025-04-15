@@ -11,8 +11,8 @@ import type { Tickets } from '../types'
 import type { TableQueries } from '@/@types/common'
 
 const statusColor: Record<string, string> = {
-    active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
-    blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
+  active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
+  blocked: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
 }
 
 const NameColumn = ({ row }: { row: Tickets }) => {
@@ -132,18 +132,18 @@ const TicketsListTable = () => {
         // },
       },
       {
-          header: 'Status',
-          accessorKey: 'status',
-          cell: (props) => {
-              const row = props.row.original
-              return (
-                  <div className="flex items-center">
-                      <Tag className={statusColor[row.status]}>
-                          <span className="capitalize">{row.status}</span>
-                      </Tag>
-                  </div>
-              )
-          },
+        header: 'Status',
+        accessorKey: 'status',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <div className="flex items-center">
+              <Tag className={statusColor[row.status]}>
+                <span className="capitalize">{row.status}</span>
+              </Tag>
+            </div>
+          )
+        },
       },
       {
         header: 'Priority',

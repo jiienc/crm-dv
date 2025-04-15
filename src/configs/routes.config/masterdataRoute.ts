@@ -23,6 +23,15 @@ const masterdataRoute: Routes = [
         },
     },
     {
+        key: 'masterData.customers.details',
+        path: `${MASTERDATA_PREFIX_PATH}/customers/customer-details/:id`,
+        component: lazy(() => import('@/views/masterData/customers-details/CustomerDetails')),
+        authority: [ADMIN, USER],
+        meta: {
+            pageContainerType: 'contained',
+        },
+    },
+    {
         key: 'masterData.products',
         path: `${MASTERDATA_PREFIX_PATH}/products`,
         component: lazy(() => import('@/views/masterData/products/ProductList')),
@@ -31,6 +40,15 @@ const masterdataRoute: Routes = [
             pageContainerType: 'contained',
         },
     },
+    {
+        key: 'masterData.products.edit',
+        path: `${MASTERDATA_PREFIX_PATH}/products/product-edit/:id`,
+        component: lazy(() => import('@/views/masterData/products-edit/ProductEdit')),
+        authority: [ADMIN, USER],
+        meta: {
+            pageContainerType: 'contained',
+        },
+    }
 ]
 
 export default masterdataRoute

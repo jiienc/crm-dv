@@ -4,8 +4,8 @@ export type GetCustomerListResponse = {
 }
 
 export type Customer = {
-    name: string
-    customer_name: string
-    primary_address: string
-    customer_type: string
-  }
+  name: string
+  customer_name: string
+  primary_address: string
+  creation: string
+}

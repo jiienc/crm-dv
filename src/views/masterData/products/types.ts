@@ -5,8 +5,8 @@ export type GetProductListResponse = {
 
 export type Product = {
   name: string
-  item_code: string
+  creation: string
   item_group: string
-  variant_based_on: string
-  asset_category: string
+  standard_rate: string
+  stock_uom: string
 }

@@ -1,10 +1,7 @@
 import { useMemo } from 'react'
-import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useCompanyList from '../hooks/useCompanyList'
-import { Link, useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
-import { TbPencil, TbEye } from 'react-icons/tb'
 import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 import type { Company } from '../types'
 import type { TableQueries } from '@/@types/common'
@@ -12,12 +9,9 @@ import type { TableQueries } from '@/@types/common'
 const NameColumn = ({ row }: { row: Company }) => {
   return (
     <div className="flex items-center">
-      <Link
-        className={`hover:text-primary ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`}
-        to={`/concepts/companys/company-details/${row.name}`}
-      >
+      <p className={`ml-2 rtl:mr-2 font-semibold text-gray-900 dark:text-gray-100`} >
         {row.company_name}
-      </Link>
+      </p>
     </div>
   )
 }
@@ -30,13 +24,13 @@ const PhoneColumn = ({ row }: { row: Company }) => {
   )
 }
 
-// const PicColumn = ({ row }: { row: Company }) => {
-//   return (
-//     <div className="flex items-center">
-//       <p>{row.pic}</p>
-//     </div>
-//   )
-// }
+const PicColumn = ({ row }: { row: Company }) => {
+  return (
+    <div className="flex items-center">
+      <p>{row.pic}</p>
+    </div>
+  )
+}
 
 const EmailColumn = ({ row }: { row: Company }) => {
   return (
@@ -46,48 +40,15 @@ const EmailColumn = ({ row }: { row: Company }) => {
   )
 }
 
-// const AssignedColumn = ({ row }: { row: Company }) => {
-//   return (
-//     <div className="flex items-center">
-//       <p>{row.assigned}</p>
-//     </div>
-//   )
-// }
-
-const ActionColumn = ({
-  onEdit,
-  onViewDetail,
-}: {
-  onEdit: () => void
-  onViewDetail: () => void
-}) => {
+const AssignedColumn = ({ row }: { row: Company }) => {
   return (
-    <div className="flex items-center gap-3">
-      <Tooltip title="Edit">
-        <div
-          className={`text-xl cursor-pointer select-none font-semibold`}
-          role="button"
-          onClick={onEdit}
-        >
-          <TbPencil />
-        </div>
-      </Tooltip>
-      <Tooltip title="View">
-        <div
-          className={`text-xl cursor-pointer select-none font-semibold`}
-          role="button"
-          onClick={onViewDetail}
-        >
-          <TbEye />
-        </div>
-      </Tooltip>
+    <div className="flex items-center">
+      <p>{row.assigned}</p>
     </div>
   )
 }
 
 const CompanyListTable = () => {
-  const navigate = useNavigate()
-
   const {
     companyList,
     companyListTotal,
@@ -98,14 +59,6 @@ const CompanyListTable = () => {
     setSelectedCompany,
     selectedCompany,
   } = useCompanyList()
-
-  const handleEdit = (company: Company) => {
-    navigate(`/concepts/companys/company-edit/${company.name}`)
-  }
-
-  const handleViewDetails = (company: Company) => {
-    navigate(`/concepts/companys/company-details/${company.name}`)
-  }
 
   const columns: ColumnDef<Company>[] = useMemo(
     () => [
@@ -128,10 +81,10 @@ const CompanyListTable = () => {
       {
         header: 'PIC',
         accessorKey: 'pic',
-        // cell: (props) => {
-        //   const row = props.row.original
-        //   return <PicColumn row={row} />
-        // },
+        cell: (props) => {
+          const row = props.row.original
+          return <PicColumn row={row} />
+        },
       },
       {
         header: 'Email',
@@ -144,23 +97,12 @@ const CompanyListTable = () => {
       {
         header: 'Assigned',
         accessorKey: 'assigned',
-        // cell: (props) => {
-        //   const row = props.row.original
-        //   return <AssignedColumn row={row} />
-        // },
-      },
-      {
-        header: 'Action',
-        id: 'action',
-        cell: (props) => (
-          <ActionColumn
-            onEdit={() => handleEdit(props.row.original)}
-            onViewDetail={() => handleViewDetails(props.row.original)}
-          />
-        ),
+        cell: (props) => {
+          const row = props.row.original
+          return <AssignedColumn row={row} />
+        },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 
