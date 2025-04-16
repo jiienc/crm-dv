@@ -23,3 +23,25 @@ export async function apiGetCustomer<T, U extends Record<string, unknown>>({
       params,
   })
 }
+
+export async function apiGetBilling<T, U extends Record<string, unknown>>({
+  id,
+  ...params
+}: U) {
+  return ApiService.fetchDataWithAxios<T>({
+      url: `/resource/Address/${id}-Billing`,
+      method: 'get',
+      params,
+  })
+}
+
+export async function apiGetShipping<T, U extends Record<string, unknown>>({
+  id,
+  ...params
+}: U) {
+  return ApiService.fetchDataWithAxios<T>({
+      url: `/resource/Address/${id}-Shipping`,
+      method: 'get',
+      params,
+  })
+}

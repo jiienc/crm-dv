@@ -47,6 +47,10 @@ const ProfileSection = ({ data = {} }: ProfileSectionProps) => {
             title="Customer Name"
             value={customer.customer_name}
           />
+          <CustomerInfoField title="Status" value={code} />
+          <CustomerInfoField title="Company Code" value={code} />
+          <CustomerInfoField title="Tax ID" value={code} />
+          <CustomerInfoField title="Tax Type" value={code} />
         </div>
       </div>
     </Card>

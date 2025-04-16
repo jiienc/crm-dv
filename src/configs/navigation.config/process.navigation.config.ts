@@ -1,7 +1,6 @@
 import { PROCESS_PREFIX_PATH } from '@/constants/route.constant'
 import {
   NAV_ITEM_TYPE_TITLE,
-  NAV_ITEM_TYPE_COLLAPSE,
   NAV_ITEM_TYPE_ITEM,
 } from '@/constants/navigation.constant'
 import { ADMIN, USER } from '@/constants/roles.constant'
@@ -80,87 +79,6 @@ const processNavigationConfig: NavigationTree[] = [
           },
         },
         subMenu: [],
-      },
-      {
-        key: 'process.requests',
-        path: '',
-        title: 'Requests',
-        translateKey: 'nav.processRequests.requests',
-        icon: 'requests',
-        type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [ADMIN, USER],
-        meta: {
-          description: {
-            translateKey: 'nav.processRequests.requestsDesc',
-            label: 'Requests Section',
-          },
-        },
-        subMenu: [
-          {
-            key: 'process.requests.sample',
-            path: `${PROCESS_PREFIX_PATH}/requests/sample`,
-            title: 'Sample',
-            translateKey: 'nav.processRequests.sample',
-            icon: '',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
-            meta: {
-              description: {
-                translateKey: 'nav.processRequests.sampleDesc',
-                label: 'Sample Requests List',
-              },
-            },
-            subMenu: [],
-          },
-          {
-            key: 'process.requests.productImprovement',
-            path: `${PROCESS_PREFIX_PATH}/requests/product-improvement`,
-            title: 'Product Improvement',
-            translateKey: 'nav.processRequests.productImprovement',
-            icon: '',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
-            meta: {
-              description: {
-                translateKey: 'nav.processRequests.productImprovementDesc',
-                label: 'Product Improvement Requests List',
-              },
-            },
-            subMenu: [],
-          },
-          {
-            key: 'process.requests.newProduct',
-            path: `${PROCESS_PREFIX_PATH}/requests/new-product`,
-            title: 'New Product',
-            translateKey: 'nav.processRequests.newProduct',
-            icon: '',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
-            meta: {
-              description: {
-                translateKey: 'nav.processRequests.newProductDesc',
-                label: 'New Product Requests List',
-              },
-            },
-            subMenu: [],
-          },
-          {
-            key: 'process.requests.return',
-            path: `${PROCESS_PREFIX_PATH}/requests/return`,
-            title: 'Return',
-            translateKey: 'nav.processRequests.return',
-            icon: '',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
-            meta: {
-              description: {
-                translateKey: 'nav.processRequests.returnDesc',
-                label: 'Return Requests List',
-              },
-            },
-            subMenu: [],
-          },
-        ],
       },
       {
         key: 'process.quotation',

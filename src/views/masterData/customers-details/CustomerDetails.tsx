@@ -2,7 +2,7 @@ import Card from '@/components/ui/Card'
 import Tabs from '@/components/ui/Tabs'
 import Loading from '@/components/shared/Loading'
 import ProfileSection from './ProfileSection'
-import BillingSection from './BillingSection'
+import DetailsSection from './DetailsSection'
 import { apiGetCustomer } from '@/services/masterdata-components/customers/CustomersService'
 import useSWR from 'swr'
 import { useParams } from 'react-router-dom'
@@ -35,7 +35,6 @@ const CustomerDetails = () => {
     <Loading loading={isLoading}>
       {!isEmpty(data) && (
         <div className="flex flex-col gap-4">
-          {/* Back Button Section */}
           <div className="flex justify-start">
             <Button
               className="rounded-lg"
@@ -48,19 +47,18 @@ const CustomerDetails = () => {
             </Button>
           </div>
 
-          {/* Main Content Section */}
           <div className="flex flex-col xl:flex-row gap-4">
             <div className="min-w-[330px] 2xl:min-w-[400px]">
               <ProfileSection data={data} />
             </div>
             <Card className="w-full">
-              <Tabs defaultValue="billing">
+              <Tabs defaultValue="details">
                 <TabList>
-                  <TabNav value="billing">Billing</TabNav>
+                  <TabNav value="details">Details</TabNav>
                 </TabList>
                 <div className="p-4">
-                  <TabContent value="billing">
-                    <BillingSection data={data} />
+                  <TabContent value="details">
+                    <DetailsSection data={data} />
                   </TabContent>
                 </div>
               </Tabs>
