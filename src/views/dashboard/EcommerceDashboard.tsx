@@ -11,7 +11,6 @@ import useSWR from 'swr'
 import type { GetEcommerceDashboardResponse } from './types'
 import Card from '@/components/ui/Card'
 import TopProduct from './components/TopProduct'
-import Request from './components/Request'
 
 const SalesDashboard = () => {
   const { data, isLoading } = useSWR(
@@ -48,7 +47,6 @@ const SalesDashboard = () => {
               </div>
             </div>
             <ProjectStatistic />
-            <Request />
             <TopProduct />
           </div>
         </div>
